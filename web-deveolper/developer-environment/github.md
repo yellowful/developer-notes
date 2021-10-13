@@ -190,20 +190,16 @@ git會做記號，刪除不要的，保留要的，解決衝突
     4. 然後會再進入vim，把commits內容修改成你要的內容，然後存檔跳出。
     5. 這時候就可以直接push了，因為中間沒有任何commits含有node_modules的內容了。
 3. 如果是已經push上去的commit，要更動的話，要用`push -f`，如果是共用的專案，會導致變動到別人的commit，要小心使用。
+4. [改commit messages](https://gitbook.tw/chapters/rewrite-history/change-commit-message.html)：上面提到的`squash`改成`reword`就好了。
 
 ## 其他常用command
 
-`git commit --amend --no-edit`：[追加檔案到最近一次的 Commit](https://gitbook.tw/chapters/using-git/amend-commit2.html)
-
-`git ls-tree -r master --name-only`：看所有track的檔案
-
-`git log --oneline`：看所有commit
-
-`git log --graph --decorate --oneline --all`：用文字方式畫出branch的圖
-
-`git config --local core.ignorecase false`：讓檔名大小寫的改變要被追蹤，才不會出錯。因為舊mac不是case sensitive，但是netlify是case sensitive，所以會出錯。
-
-`git remote remove origin`：例如遇到remote的repo有問題砍掉重開，這時local會push不上去，也無法設remote。解決方式是在local先把remote移除，就是用這行指令。
+- `git commit --amend --no-edit`：[追加檔案到最近一次的 Commit](https://gitbook.tw/chapters/using-git/amend-commit2.html)
+- `git ls-tree -r master --name-only`：看所有track的檔案
+- `git log --oneline`：看所有commit
+- `git log --graph --decorate --oneline --all`：用文字方式畫出branch的圖
+- `git config --local core.ignorecase false`：讓檔名大小寫的改變要被追蹤，才不會出錯。因為舊mac不是case sensitive，但是netlify是case sensitive，所以會出錯。
+- `git remote remove origin`：例如遇到remote的repo有問題砍掉重開，這時local會push不上去，也無法設remote。解決方式是在local先把remote移除，就是用這行指令。
 
 ## 檔案
 
@@ -254,3 +250,4 @@ git會做記號，刪除不要的，保留要的，解決衝突
 ## 其它資源
 
 - 用動畫解釋git：<https://dev.to/lydiahallie/cs-visualized-useful-git-commands-37p1?fbclid=IwAR3Pzk7-nu1PLipx8tNGVUTRox3RibIJM5rVCxcDFzZFlwOD9LfuIsyl_u4>
+- [為git commit加上emoji](https://hooj0.github.io/git-emoji-guide/)

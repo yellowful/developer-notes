@@ -279,7 +279,9 @@
 6. container：
    1. 完整測試用redux用的套件：`redux-mock-store`
    2. 簡單測試：
-      1. 方法1：加上export`export class App extends Component{}`，不要測試複雜的connect。
+      1. 方法1：
+         1. 加上export`export class App extends Component{}`，不要測試複雜的connect。
+         2. 我自己試不行，因為connect也會export一個App，而且需要放store的props進去。
       2. 方法2：
          1. 把原來的`App.js`拆成兩個檔，一個是原來的`App.js`，另一個是新的`Main.js`
          2. 原來的`App.js`留下所有的redux相關的就好了，其它刪掉。
@@ -290,3 +292,7 @@
          7. 技巧：
             1. mock props的時候，要傳進去當props的function可以用`jest.fn()`，告訴jest，那個props就只是一個functions。
             2. 要測試container component裡面function的邏輯的話，可以利用設計mockProps傳進去container component，然後利用`.instance()`去呼叫component裡面的method，然後測試return的值。
+   3. 心得：
+      1. 要了解目前在測試的什麼？要測試container裡面的某個function的邏輯？或是某些特定props下的snapshot？或是某些props下，是不是某些function會被呼叫？或是某些props下，某些function被某些props呼叫？
+      2. 看到要測試的component，先想到有什麼是可以測的。
+      3. 但也要適可而止，否則成本非常高。
