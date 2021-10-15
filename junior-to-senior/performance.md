@@ -284,7 +284,8 @@
                   3. **chages** using pure functions：reducer這個function沒有side effect，只需要return新的state。
                   4. return的`Object.assign({},state,{searchField:action.payload})`中，其中的state是整個store的大object，這一行程式，是對整個store複製一個大object，但是這個大object只有searchField這個attribute不一樣，有變動。
                   5. default是return state，這就是原來的大object。
-                  6. redux API對reducer做的事：
+                  6. rdeucer可以看做是一個controller，用來吃action吐state。
+                  7. redux API對reducer做的事：
                      1. 丟state大object和action進去。
                      2. 接收reducer丟出來的新state，把新的state存在store裡面。
                3. redux：
@@ -315,10 +316,10 @@
                            1. mapDispatchToProps是一個object，所以function要return一個object
                            2. 這個object的一個attribute就會放一個function，這個function被觸發的時候會變成一個object。
                            3. dispatch()裡面要放action的object，所以setSearchField就會回傳一個object。
-                           4. onSearchChange這個attribute放的就是onSearchChange這個attribute，所以會被event觸發，所以parameter會是event。
-                           5. 被觸發後要把action丟進dispatch裡面去，所以要寫一個function叫setSearchField()，只要把event.target.value丟進這個function後，就會把一個action丟出來。
+                           4. onSearchChange這個attribute放的就是onSearchChange這個callback，所以會被event觸發，所以parameter會是event。
+                           5. 被觸發後要把action丟進dispatch裡面去，所以需要import一個function叫setSearchField()，只要把event.target.value丟進這個function後，就會把一個action丟出來。
                         8. 一個container component對應一個connect
-                  3. 可以只有部份state和redux連接，例如課程第109堂redux connect，就只有先把searchField的state變成redux，robots還是this.state，還是可以用。
+                  3. 可以只有部份state和redux連接，例如課程第109堂redux connect，就只有先把searchField的state變成redux，robots還是this.state，還是可以用，但是要注意的是，這就不符合single source of true，可能造成debug困難。
                   4. database會遇到一堆read和write的要求，同時又要減少bug和錯誤的發生，所以redux就用類似database處理資料的方式處理state，就可以非常好的整理state。
                   5. middleware：
                      1. thunk：

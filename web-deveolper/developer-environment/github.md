@@ -185,7 +185,9 @@ git會做記號，刪除不要的，保留要的，解決衝突
 1. 這個command要非常小心用，特別是如果已經push上去的commit不適合，因為會影響github上面的記錄。
 2. git rebase可以用來合併commits，有一種情況是，如果node_modules太大，會無法git push。這時候如果直接加上.gitignore，然後commit了，仍然會無法git push，因為他沒有更新cache，所以仍然是在track`node_modules`，即使後來你再更新cache了，依然會無法push，因為git push的時候會把上一個還沒清cache的commit上傳，而那個commit仍然包含過大的node_modules。所以解決的方法就是要把這個已經清cache的commit和還沒清cache的commit合併在一起。
     1. <https://gitbook.tw/chapters/rewrite-history/merge-multiple-commits-to-one-commit.html>
-    2. `git rebase -i 上上上個HEAD`：意思是我要調整或修改一連串個commits，一直到上上上個HEAD。
+    2. `git rebase -i 上上上個HEAD`：
+       1. 意思是我要調整或修改一連串個commits，一直到上上上個HEAD。
+       2. 如果要修改第一個commits，就用`git rebase -i --root`
     3. 然後會進去vim，把這次的commits前面的pick改成squash，存檔跳出。squash的意思是「和前一個commit合併」。
     4. 然後會再進入vim，把commits內容修改成你要的內容，然後存檔跳出。
     5. 這時候就可以直接push了，因為中間沒有任何commits含有node_modules的內容了。
@@ -250,4 +252,7 @@ git會做記號，刪除不要的，保留要的，解決衝突
 ## 其它資源
 
 - 用動畫解釋git：<https://dev.to/lydiahallie/cs-visualized-useful-git-commands-37p1?fbclid=IwAR3Pzk7-nu1PLipx8tNGVUTRox3RibIJM5rVCxcDFzZFlwOD9LfuIsyl_u4>
-- [為git commit加上emoji](https://hooj0.github.io/git-emoji-guide/)
+- 為git commit加上emoji：
+  - <https://gist.github.com/parmentf/035de27d6ed1dce0b36a>
+  - <https://www.webfx.com/tools/emoji-cheat-sheet/>
+  - <https://hooj0.github.io/git-emoji-guide/>

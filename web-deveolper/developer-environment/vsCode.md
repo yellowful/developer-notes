@@ -91,3 +91,4 @@
 8. 設定：
    1. Accept Suggestion On Commit Character：設成false的話，可以設定`.`不要自動選字。
    2. Accept Suggestion On Enter：設成false的話，可以設定按enter的時候，不要自動選字。
+   3. [完整移除vsCode](https://stackoverflow.com/questions/42603103/how-to-completely-uninstall-vscode-on-mac)
