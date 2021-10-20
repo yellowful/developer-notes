@@ -65,6 +65,15 @@ solution: amazon
     呼叫這個function時，是把各種方法依序放到這個綜合所有function的arguments裡面去，並放入data的arguments進去另一個小括號裡。
     好處是每一個小function都是pure的，都不會改變原來的user和item的資料產生bug，可以增加一個history的記錄。
 
+[functional programing網路文章](https://medium.com/%E4%B8%80%E5%80%8B%E5%B0%8F%E5%B0%8F%E5%B7%A5%E7%A8%8B%E5%B8%AB%E7%9A%84%E9%9A%A8%E6%89%8B%E7%AD%86%E8%A8%98/javascript-functional-programming-%E4%B8%80%E6%96%87%E5%88%B0%E5%BA%95%E5%85%A8%E7%B4%80%E9%8C%84-95ff19d9892)
+
+上面文章和marine date作業的心得，是把一堆function compose起來：
+
+   1. compose = (...fns) => x => fns.reduceRight((acc,f)=>f(acc),x)
+   2. 意思是我要把這一堆function，從最後右的function開始執行，最右邊的function先代x進去，return的結果朝左邊的function開始代進去，要用的時候就compose(...fns)(x)。
+   3. 這些function要剛好右邊function return的格式要剛好是左邊function input的格式。
+   4. 如果最右邊的function不用input，那麼就不需要上面的x，執行時也不用x，例如compose(...fns)。
+
 ## hoisting
 
 1. global execution context有兩個phase：

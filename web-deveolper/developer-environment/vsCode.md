@@ -88,7 +88,8 @@
       5. mermaid：可以畫流程圖，不過有的markdown render系統不支援。
    2. indent：3個空白
    3. 要表格好處理，可能要另外灌extention，讓excel可以貼上。
-8. 設定：
+8. 把某檔案的頁面維持開著，不會隨著點別的檔案而關掉：把檔案拉去上面的tab處，再點別的檔案就不會被關掉了。
+9. 設定：
    1. Accept Suggestion On Commit Character：設成false的話，可以設定`.`不要自動選字。
    2. Accept Suggestion On Enter：設成false的話，可以設定按enter的時候，不要自動選字。
    3. [完整移除vsCode](https://stackoverflow.com/questions/42603103/how-to-completely-uninstall-vscode-on-mac)
