@@ -44,6 +44,7 @@
    21. Command+d：選取下一個相同的字
    22. ctr+tab：切換tab
    23. cmd+K,cmd+s：叫出快速鍵說明
+   24. fn+f2：改變html開始和結束的tag。
 6. es7 extension的+tab相關縮寫：
    1. 最常用的：
       1. rce：react class component和export

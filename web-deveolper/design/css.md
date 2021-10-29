@@ -141,6 +141,9 @@ almanac有詳列property
             3. -ns：-m或-l其中至少某一個沒設定的時候，會取代那個設定
             4. 所以-m和-l同時有設定時，就不用設定-ns
             5. 如果只有設定-m的話，那-l的設定回函-m相同
+    5. 容易忘記的class：
+       1. input-reset：讓ios的input不會變形
+       2. button-reset：讓按完button不會有很醜的藍色外框
 16. bulma：
     1. 算是精簡版和純css的bootstrap。
     2. 與社辦自由度較低，為了增加自由度，最好用自訂變數的用法：

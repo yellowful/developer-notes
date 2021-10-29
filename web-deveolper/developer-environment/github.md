@@ -94,6 +94,17 @@
         `git merge --no-ff branch1`  
         `git push origin master`
 
+## clone branch回來
+
+1. [網址](https://stackoverflow.com/questions/67699/how-to-clone-all-remote-branches-in-git)
+2. 選擇性：
+   1. 一般的方式clone下來。
+   2. `git branch -a`：可以看到還沒被local建立branch的幾個branch呈現紅字
+   3. `git checkout branch-name`：會自動在local建立對應的branch了
+3. 全部branch都要clone下來：
+   1. 一般的方式clone下來。
+   2. `git pull --all`
+
 ## 第一次使用的常用步驟
 
 1. 首先下載git，並安裝  
@@ -202,6 +213,18 @@ git會做記號，刪除不要的，保留要的，解決衝突
 - `git log --graph --decorate --oneline --all`：用文字方式畫出branch的圖
 - `git config --local core.ignorecase false`：讓檔名大小寫的改變要被追蹤，才不會出錯。因為舊mac不是case sensitive，但是netlify是case sensitive，所以會出錯。
 - `git remote remove origin`：例如遇到remote的repo有問題砍掉重開，這時local會push不上去，也無法設remote。解決方式是在local先把remote移除，就是用這行指令。
+
+## 版控流程
+
+1. [三種不同流程](https://medium.com/@lf2lf2111/%E4%B8%89%E7%A8%AE%E7%89%88%E6%8E%A7%E6%B5%81%E7%A8%8B-29c82f5d4469)
+2. [git-flow](https://gitbook.tw/chapters/gitflow/why-need-git-flow.html?fbclid=IwAR3szmZqaERrFk2jt8iyLhpisfRN3-fsN1sOMGb0_XM87JHU3ZKVC7QUkV0)
+   - [develop和hotfix的差別](https://softwareengineering.stackexchange.com/questions/340047/where-does-refactoring-belong-in-gitflow-branch-naming-model/340056)
+     - 差別不在於修bug或是新的feature，而在於new feature是從develop分支出去，修bug則是從master分支出去一個hotfix。
+     - hotfix修完要同時合併回master和develop，才不會讓develop合併回master時又衝突。
+     - refactoring雖然不是hotfix也不是new feature，但是因為沒有要從master直接分支出去，所以要從develop分出去，類似new feature的功能。
+     - [用source tree操作](https://gitbook.tw/chapters/gitflow/using-git-flow.html)
+     - 其中會出現一個錯誤`Fatal: Local branch 'develop' does not exist.`，這代表需要自己先手動去開一個branch叫develop。
+   - develop branch上傳github：`git push origin develop`
 
 ## 檔案
 

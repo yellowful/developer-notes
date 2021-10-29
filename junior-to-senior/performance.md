@@ -263,79 +263,10 @@
           2. useState或是useEffect不能放在內部一般function裡面。
           3. useState或是useEffect不能放在code block裡面，意思是不能放在if else或是loops裡面。
           4. hooks另一個用途是可以用來做重複使用的state，可以跨component使用，例如寫一個React的functional component，然後會回傳Online或是Offline的字串，用來抓取使用者的上線狀態，並且讓各個component裡面可以用到。聽說這個用class component很難做得到？
-      12. redux：
-            1. 概念：
-               1. 可以減少rerender。
-               2. state可以改變，props不可以改變，在React底下，當App愈來愈大，會有很多container component，也就是有很多state需要追踨，因為他們會改變，這造成追踨困難。而redux把state集中在一個地方管理，而且用sql的技術良好管理。
-               3. 第103課state management：React很擅長處理view，但不見得很擅長處理state，處理state是redux的專長。
-               4. flux pattern：
-                  1. action => dispatcher => store => view
-                  2. action就是event (value)，dispatcher就是reducer這個pure function，store會把state變成props丟出來，view就是react
-               5. mvc：
-                  1. action => controller => model => view
-                  2. action就是event，controller就是javascript，model可以看做state，view就是結果。
-                  3. 其中controller會產生一大堆沒規律難以追踨的state，這些state會改變view，但是這些view可能又改變了state而去改變了view，很難追踨。 
-               6. 總之redux就是用來取代this.state的。
-            2. 實作注意事項：
-               1. 用redux toolkit可以協助快速建立redux，不用寫那麼多code。
-               2. reducer：
-                  1. single source of truth：所以要從store拿state出來
-                  2. state is read only：所以用Object.assign()
-                  3. **chages** using pure functions：reducer這個function沒有side effect，只需要return新的state。
-                  4. return的`Object.assign({},state,{searchField:action.payload})`中，其中的state是整個store的大object，這一行程式，是對整個store複製一個大object，但是這個大object只有searchField這個attribute不一樣，有變動。
-                  5. default是return state，這就是原來的大object。
-                  6. rdeucer可以看做是一個controller，用來吃action吐state。
-                  7. redux API對reducer做的事：
-                     1. 丟state大object和action進去。
-                     2. 接收reducer丟出來的新state，把新的state存在store裡面。
-               3. redux：
-                  1. redux：
-                     1. createStore：用來丟reducer進去
-                     2. store可以直接當成props傳給app印出來，裡面是個大object，用getState()可以得到state。
-                     3. Provider：但我們通常會把store放到Provider的props裡。
-                  2. react-redux：
-                     1. 主要用Provider和connect來取代.getState()和.subscribe()，.getState()可以取得要的state，.subscribe()可以取得要訂閱props的component。
-                     2. Provider：用來把store裡的state轉成props下去，給所有的子孫。
-                     3. connect：
-                        1. higher order function：第一個括號run完會回傳另一個function，這個被回傳的function才會把第二個括號run完。
-                        2. 主要是說，我要訂閱redux store所有的state變化。
-                        3. mapStateToProps和mapDispatchToProps是可以自己命名的，用來告訴connect，我要訂閱什麼state和什麼dispatch。
-                        4. 在flux裡面dispatch的意思是，觸發action的東西。
-                        5. action就是一個有名稱有值的object，需要被dispatch送去給reducer。
-                        6. mapDispatchToProps範例：
-
-                           ```js
-                              const mapDispatchToProps = (dispatch) => {
-                                 return {
-                                    onSearchChange:(event)=>dispatch(setSearchField(event.target.value))
-                                 }
-                              }
-                           ```
-
-                        7. 上面的範例裡：
-                           1. mapDispatchToProps是一個object，所以function要return一個object
-                           2. 這個object的一個attribute就會放一個function，這個function被觸發的時候會變成一個object。
-                           3. dispatch()裡面要放action的object，所以setSearchField就會回傳一個object。
-                           4. onSearchChange這個attribute放的就是onSearchChange這個callback，所以會被event觸發，所以parameter會是event。
-                           5. 被觸發後要把action丟進dispatch裡面去，所以需要import一個function叫setSearchField()，只要把event.target.value丟進這個function後，就會把一個action丟出來。
-                        8. 一個container component對應一個connect
-                  3. 可以只有部份state和redux連接，例如課程第109堂redux connect，就只有先把searchField的state變成redux，robots還是this.state，還是可以用，但是要注意的是，這就不符合single source of true，可能造成debug困難。
-                  4. database會遇到一堆read和write的要求，同時又要減少bug和錯誤的發生，所以redux就用類似database處理資料的方式處理state，就可以非常好的整理state。
-                  5. middleware：
-                     1. thunk：
-                        1. 一般function是return一個action object，async function裡面一開始只有dispatch不同的action，沒有return任何東西。
-                        2. mapDispatchToProps：
-                           1. 例如`onRequestRobots:()=>dispatch(requestRobots())`
-                           2. 其中，onRequestRobtos這個props會是一個function，執行的時候會dispatch一個function出去，這個function叫作requestRobots()。
-                           3. 而requestRobots()回傳需要是一個function，redux thunk才會等他，所以在action那邊，requestRobots()會需要是一個higher order function才能回傳一個function。
-                           4. 這個被回傳的function會被thunk丟dispatch進去parameter，然後這個function要把action放到dispatch裡面，thunk就會把這些action丟給reducer了。
-                  6. folder：
-                     1. 通常實務上會一個container一個folder，裡面裝了相關的representive component和相關的reducers和actions。
-                     2. 這樣會很容易分享這個component，也很容易思考，和找bug。
-                     3. 實務上也會有一個API的資料夾，裡面可以有function讓我們可以把url丟進去，就獲得資料，不用一直repeat .then這些。
+      12. redux
    4. javascript生態常用的工具：
       1. react router：機乎和react和redux搭擋成標配了
-      2. Ramda：非常適合functional programing的js library，另外一套很受歡迎的是lodash。
+      2. Ramda：非常適合functional programing的js library，另外一套很受歡迎的是lodash，裡面有提供compose, curry的現成functions可以用。
       3. css：
          1. glamorous
          2. styled components
@@ -367,6 +298,7 @@
             3. 距離很遠的component傳遞state，改用其中之一：
                1. unstated
                2. useContext
+
 
 ## react performance
 

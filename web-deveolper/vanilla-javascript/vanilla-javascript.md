@@ -269,7 +269,7 @@
             5. setState({a:'b'})，裡面放的是物件而不是destructure。
         4. 相反的short hand：
             1. 當要把一個object的key指定一個變數的value，而這個key的名稱和這個value變數的名稱相同時，可以用這個short hand，例如：{user}就是{user:user}的short hand，{user:user}的第一個user是object的key，第二個user是要當value的變數名稱。
-            2. 這個short hand不是destructuring，destructuring是設定新變數，這個short hand是指定value給key。
+            2. 這個short hand也是destructuring的一種，不一樣的是正面的short hand是設定新變數，這個short hand是指定value給key。
 20. Prototype:
     1. <https://blog.techbridge.cc/2017/04/22/javascript-prototype/>
     2. <https://eyesofkids.gitbooks.io/javascript-start-from-es6/content/part4/prototype.html>

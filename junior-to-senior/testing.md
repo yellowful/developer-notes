@@ -45,14 +45,17 @@
    3. 其它工具：
       1. Jasmine以前很流行
       2. 現在Jest比較流行：
-         1. jest是facebook弄的
-         2. jest每一種tests都可以做，比較方便
-         3. create-react-app已裝好jest
-         4. snapshot testing是針對react的test
+         1. 前端常用
+         2. jest是facebook弄的
+         3. jest每一種tests都可以做，比較方便
+         4. create-react-app已裝好jest
+         5. snapshot testing是針對react的test
       3. mocha：
-         1. 比較彈性，可以用其它的extension
-         2. 比較難設定
-      4. 其它library：
+         1. 後端常用
+         2. 比較彈性，可以用其它的extension
+         3. 比較難設定
+      4. chai：後端常用
+      5. 其它library：
          1. ava：可以併行處理，速度非常快
          2. tape：低階、輕量化
          3. enzyme：
@@ -102,13 +105,15 @@
             2. web drive io：documentation最好
             3. test cafe：只想快速測試，不太在意不同browser的情況
             4. nightmare：很簡單的模擬使用者行為，或是進行網頁抓取
-            5. Cypress
+            5. Cypress：很常用，很有名
+            6. Puppeteer：很常用，很有名
       3. 介由控制browser，來確定在瀏覽器上的行為正如你所預期
       4. 最難實現，因為有太多情況，太多edge cases需要測試，只有大公司有錢的公司才有辦法花錢在上面。
       5. 很多公司是測試人員測試。
       6. 和另外兩個test的比較：
          1. automation test通常會獨立於integration tests和unit tests，因為automation test通常要花比較多時間。
          2. automation test通常久久才做一次，例如一整天做一次，或是一星期做一次，或是merge前才做一次。另外兩種測試可以很常做。
+      7. 以畫面截圖進行像素比對的測試：visual regression testing
 
 ## Jest
 
@@ -362,6 +367,7 @@
    7. 要用jest的snapshot功能的話：
       1. 要用[asFragment的api](https://testing-library.com/docs/react-testing-library/api/#asfragment)，不過要注意，snapshot有它的缺點，有時候改不重要的東西的時候，也無法通過測試，理論上應該是要測試重要邏輯就好了。[可以參考這篇的觀點](https://typeofnan.dev/how-to-test-your-react-app-effectively-with-react-testing-library/)。
       2. jest還有一個`.toMatchDiffSnapshot()`可以用來儲兩個不同狀態下，相異的snapshot。
+      3. 官方例子好像比較多是用`react-test-renderer`套件來進行快照。
 2. [教學影片](https://www.youtube.com/watch?v=GLSSRtnNY0g)：
    1. 為什麼要寫程試自動test，而不用手動測試？
       1. 因為寫測試主要是要去避免寫了新功能造成舊功能壞掉。
@@ -512,3 +518,5 @@
    1. 寫tests不是為了獲得100%的code coverage。
    2. test讓你從另一個角度來看自己寫的code，有時候為了讓test能夠執行，需要重新改自己原來的code，所以有人在寫code的時候就同時寫test。
    3. 寫test在很多人合作很大的project上，能夠避免一些bugs的產生。
+3. [PJ好文](https://ithelp.ithome.com.tw/articles/10280261)
+4. 
