@@ -109,3 +109,7 @@
     3. undo：`esc`然後再按`u`
     4. option+滑鼠：可以直接改變游標位置
 16. ruby升級：`brew install ruby`
+17. curl:
+    1. 如果curl的certificate太舊了
+       1. [下載憑證](https://curl.se/ca/cacert.pem)
+       2. 下命令：`curl 要抓的網址 --cacert 下載下來的憑證位置`

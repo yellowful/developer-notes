@@ -10,6 +10,10 @@
    4. rollup.js：
       1. tree shake做的很好，可以避免掉很多不必要的code。
       2. 要發行npm package的話可以用。
+   5. 不是bundler：[vite](https://blog.techbridge.cc/2020/08/07/vite-and-esmodules-snowpack/)
+      1. 直接讓瀏覽器去處理import和export，不需要bundle，所以在develope的環境下快速很多。
+      2. product的環境下不適用，因為dependency的關係，瀏灠器沒辦法一次去下載那麼多dependency，而且速度也會被下載拖累。
+      3. 作者是vue的作者。
 2. 結構：
    1. entry：進入點，例如`index.js`，可以從進入點獲得其它所有的javascript檔案。
    2. output：輸出的`bundle.js`，`/dist`是distribution的意思。

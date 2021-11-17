@@ -69,9 +69,10 @@
          2. 這一行是讓手機能正常顯示的，必要的。
          3. 如果沒有的話，lighthouse會顯示錯誤。
       2. `manifest.json`：
-         1. 用來定義這個app在手機上看起來怎麼樣。
-         2. 在手機上如何啟動，例如：桌面上。
-         3. [realfavicongenerator](https://realfavicongenerator.net/)
+         1. [各個參數的詳細說明](https://web.dev/add-manifest/)
+         2. 用來定義這個app在手機上看起來怎麼樣。
+         3. 在手機上如何啟動，例如：桌面上。
+         4. [realfavicongenerator](https://realfavicongenerator.net/)
             1. 可以產生manifest需要的icon
             2. splash screen：
                1. 讓load之前，不要一片空白
@@ -103,6 +104,11 @@
              3. `index.js`裡serviceWorker的呼叫要抄過去。
              4. `package.json`裡的要把workbox相關的都拷貝過來。
           2. [我自己的練習](https://github.com/yellowful/robofriends-redux)
+      11. [gatsby-plugin-offline](https://www.gatsbyjs.com/plugins/gatsby-plugin-offline/)：
+          1. workbox：[globPatterns](https://github.com/isaacs/node-glob#glob-primer)：是一種特殊語法，和regex不太一樣。
+          2. lighthouse：對某些service worker(包括gatsby的)有問題，會卡住，相關issue在此：
+             1. <https://github.com/GoogleChrome/lighthouse/issues/13273>
+             2. <https://github.com/gatsbyjs/gatsby/issues/33837>
    9. 小遊戲：chrome藏了一個小遊戲，一但離線連不上網站，會出現一隻小恐龍，按一下空白鍵，會出現一個小孔龍的小遊戲。 
    10. [超多做PWAs的工具](https://progressivetooling.com/)
    11. 心得：

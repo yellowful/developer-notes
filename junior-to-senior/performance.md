@@ -30,7 +30,8 @@
          4. [各種螢幕的尺寸](https://gist.github.com/bartholomej/8415655)
       3. CDN：
          1. 用[imgix](https://imgix.com/)
-         2. imgix會自動最小化相片
+            1. imgix會自動最小化相片
+            2. [gatsby plugin](https://www.gatsbyjs.com/plugins/gatsby-plugin-imgix/)
       4. 去掉meta data：
          1. [verexif](https://www.verexif.com/)可以看得到meta data，也可以用來移除。
          2. 可以減少幾k。
@@ -135,7 +136,7 @@
          2. 其它library用async載入
             1. 改完first contentful paint降到0.681
             2. 但是最大contentful paint卻升到3.5
-         3. main.js移到最前面
+         3. main.js移到最前面
       5. 用javascript讓字型在load之後再載入？
       6. 加入favicon.ico
    2. 解答：
@@ -329,3 +330,8 @@
    1. <https://werehamster.medium.com/beware-react-setstate-is-asynchronous-ce87ef1a9cf3>
    2. <https://vasanthk.gitbooks.io/react-bits/content/patterns/19.async-nature-of-setState.html>
 7. memory leaks (第141堂課)：要移除用不到的event listener，不然愈來愈多的event listener，會用到愈來愈多的memory，然後就產生memory leaks，也就是記憶體滿了，然後就crash了。
+8. [useMemo和useCallback](https://www.udemy.com/course/the-complete-junior-to-senior-web-developer-roadmap/learn/lecture/10368962#overview)：第142堂課
+9. useContext和composition：
+   1. composition的技巧就是，把component當成props傳到第18代子孫的技巧。
+   2. useContext用在一大堆component都會需要props的情況(locale、暗黑佈景)，composition用在只有某個特定的子孫component，需要祖父母的props。
+   3. 把component當成props傳到18代子孫的好處，是如果props很多要傳這麼多代會難以追蹤，在祖父這邊就把props和component綁好，就只會佔用一個props，往下傳很好追蹤。

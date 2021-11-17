@@ -57,17 +57,17 @@
 
 ## 開branch
 
-1. 開新branch，例如名稱設為branch1  
-   `git branch branch1`
+1. 開新branch，例如名稱設為branch_name  
+   `git branch branch_name`
 2. 把現在狀態移到branch裡  
-   `git checkout branch1`
+   `git checkout branch_name`
 3. 開始工作，改你的檔案，改完存檔。  
 4. 將這個版本上傳github：  
    1. 進度存檔：  
     `git add .`  
     `git commit -m 'first branch update'`  
-   2. 因為是這個branch1第一次上傳，所以要下github端的起始指令：  
-    `git push --set-upstream origin branch1`或是`git push -u origin branch1:branch1`
+   2. 因為是這個branch_name第一次上傳，所以要下github端的起始指令：  
+    `git push --set-upstream origin branch_name`或是`git push -u origin branch_name:branch_name`
    3. 之後這個branch要上傳都不用了下這個指令了，而是直接下：  
     `git push`
    4. 想把主線的工作，別人新加的功能加回來這個branch的話。
@@ -79,7 +79,7 @@
         `git fetch --all`  
         `git merge origin/master`
       3. 切回branch：  
-        `git chechout branch1`
+        `git chechout branch_name`
       4. 把master整合進來：  
         `git merge master`
       5. 檢視衝突的地方，修改檔案，存檔。
@@ -88,11 +88,15 @@
         `git commit -m 'first merge'`
       7. 上傳：(假如這個branch第一次上傳，請參考第2點)  
         `git push`
-      8. 到githb的web介面上點新的pull request。
+      8. 到githb的web介面上點新的pull request，pull request(pr)的意思是，對那個branch做一個request，希望他把你的修改pull過去。
       9. repository的管理者就可以點同意merge，或點comment，要求修改。或在本地端：  
         `git checkout master`  
-        `git merge --no-ff branch1`  
+        `git merge --no-ff branch_name`  
         `git push origin master`
+      10. `merge`的用法：
+          1. git checkout到直線的地方
+          2. 把分支merge回來：`git merge branch_name`
+5. 刪除branch：`git branch -d branch_name`
 
 ## clone branch回來
 
@@ -145,6 +149,13 @@
 9. 如果登入其它網站不小心被ssh-agent加入已知網站
     1. 可以這樣移除：`ssh-keygen -R 10.0.1.35`
     2. 下次可以這樣不驗證公鑰登入：`ssh -o StrictHostKeyChecking=no richard@10.0.1.35`
+
+## personal access token
+
+1. github取消了密碼登入的api，所以git command會無法push，這時候原本的本地repo會無法push，解決方式：
+   1. 先去github產生personal access token(PAT)，可以讓local的程式把PAT當成密碼
+   2. 先把遠端移除連接：`git remote remove origin`
+   3. 再把遠端連接上：`git remote add origin https://<personal access token>@github.com/<使用者名稱>/<repo的名稱>.git`
 
 ## 如果和線上版本衝突
 
@@ -204,6 +215,9 @@ git會做記號，刪除不要的，保留要的，解決衝突
     5. 這時候就可以直接push了，因為中間沒有任何commits含有node_modules的內容了。
 3. 如果是已經push上去的commit，要更動的話，要用`push -f`，如果是共用的專案，會導致變動到別人的commit，要小心使用。
 4. [改commit messages](https://gitbook.tw/chapters/rewrite-history/change-commit-message.html)：上面提到的`squash`改成`reword`就好了。
+5. [git rebase main](https://backlog.com/git-tutorial/cn/stepup/stepup2_8.html)：
+   1. 主要是為了讓main在merge別的branch的時候，commit記錄不要有別的branch記錄了。
+   2. 原來一般的作法是在main裡去merge別的branch進來，這樣commit記錄圖會看到一個分支出去的路徑，這個作法是去branch裡下`git rebase main`，這樣這個branch會消失，留下main裡多了合併這個branch的記錄。
 
 ## 其他常用command
 
@@ -218,6 +232,7 @@ git會做記號，刪除不要的，保留要的，解決衝突
 
 1. [三種不同流程](https://medium.com/@lf2lf2111/%E4%B8%89%E7%A8%AE%E7%89%88%E6%8E%A7%E6%B5%81%E7%A8%8B-29c82f5d4469)
 2. [git-flow](https://gitbook.tw/chapters/gitflow/why-need-git-flow.html?fbclid=IwAR3szmZqaERrFk2jt8iyLhpisfRN3-fsN1sOMGb0_XM87JHU3ZKVC7QUkV0)
+   - [cheat sheet](https://danielkummer.github.io/git-flow-cheatsheet/index.zh_TW.html)
    - [develop和hotfix的差別](https://softwareengineering.stackexchange.com/questions/340047/where-does-refactoring-belong-in-gitflow-branch-naming-model/340056)
      - 差別不在於修bug或是新的feature，而在於new feature是從develop分支出去，修bug則是從master分支出去一個hotfix。
      - hotfix修完要同時合併回master和develop，才不會讓develop合併回master時又衝突。
@@ -225,6 +240,33 @@ git會做記號，刪除不要的，保留要的，解決衝突
      - [用source tree操作](https://gitbook.tw/chapters/gitflow/using-git-flow.html)
      - 其中會出現一個錯誤`Fatal: Local branch 'develop' does not exist.`，這代表需要自己先手動去開一個branch叫develop。
    - develop branch上傳github：`git push origin develop`
+3. [github-flow](https://blog.hellojcc.tw/the-flaw-of-git-flow/)：
+   1. 文章提到gitflow的缺點：
+      1. gitflow的develop branch有一個問題，就是所有new feature都要從develop分支出來，這樣有可能需要將develop的commit加以整理刪除，減少不同new feature卻在develop上相依的問題，維護develop是不必要的工作。
+      2. 下面的討論有不同的觀點，但總之，讚同原作者的人認為gitflow的develop一直都會存在，不會結束回master，所以對於先前版本仍會繼續維護的開發方式是適合的。但對於有開發週期，也就是一個開發會有結束然後開啟一個新的開發的話，用github-flow就好了。
+   2. [github-flow的作法](https://blog.wu-boy.com/2017/12/github-flow-vs-git-flow/)
+      1. github-flow的重點是
+         1. new feature都從master上分支出來，不用再多維護develop的commit。
+         2. 在master進行merge分支之前，在分支上都需要把master先merge過來。
+      2. 開發人員只需要開新branch就好，push之後，管理人員下git tag
+         1. ci / cd就會根據tag自動合併和部署，如此可以避免新人合併進錯誤的branch。
+         2. 根據tag讓開發人員繼續開發
+         3. tag指令範例：
+            1. `git tag v0.1.0 -a -m '附註訊息'`：直接貼在現在的commit上
+            2. `git tag tag_name commit_sha1 -a -m '附註訊息'`：貼在想貼的commit上
+            3. 背後原理：tags和branch很像，branch是一個會跟著commits走的head，tags則是不跟著commits前進，永遠停在某一個commits的sha值，指向那個commits。
+      3. [實戰](https://blog.hellojcc.tw/a-better-git-flow/)
+         1. 開源專案基本上還要加上git-flow，因為大版本的bug需要開一個branch繼續一直修bug下去。
+         2. git tag有版本當作tag，所以可以方便記錄版本差異。
+         3. develop branch是在testing的環境
+         4. release branch是在staging的環境
+         5. testing和staging的環境都是在驗證
+4. 狀況題：
+   1. 不小心在main上面修改了檔案，根據git-flow，這應該要放到feature的branch上面，要怎麼把這個修改的檔案放到feature的branch上面呢？
+      1. 把這次修改先commit起來
+      2. 開一個新的feature branch
+      3. 到新的feature branch上面cherry-pick這次修改的commit
+      4. 回到main上面reset hard回前一次的commit
 
 ## 檔案
 
@@ -277,5 +319,6 @@ git會做記號，刪除不要的，保留要的，解決衝突
 - 用動畫解釋git：<https://dev.to/lydiahallie/cs-visualized-useful-git-commands-37p1?fbclid=IwAR3Pzk7-nu1PLipx8tNGVUTRox3RibIJM5rVCxcDFzZFlwOD9LfuIsyl_u4>
 - 為git commit加上emoji：
   - <https://gist.github.com/parmentf/035de27d6ed1dce0b36a>
+  - <https://allcontributors.org/docs/en/emoji-key>
   - <https://www.webfx.com/tools/emoji-cheat-sheet/>
   - <https://hooj0.github.io/git-emoji-guide/>

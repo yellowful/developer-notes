@@ -63,3 +63,17 @@
         noopener：目標網站無法用javascript操控我們的網站，要用
         noreferrer：目標網站不知到從我們網站推薦過去的，建議一般情況不要用，但是在target_blank的情況下還是有編譯器通常還是會因安全性問題要求要用。
         nofollow：目標網站無法獲得我們SEO分數上的權重，像youtube和facebook就會讓他們外連的連結加上nofollow，可用可不用。
+
+## accessibility
+
+1. role：
+   1. 用在非標準tag，例如用div做出來的button。
+   2. 標準的tag不用加role，因為本身就可以被唸出來。
+2. aria：Accessible Rich Internet Application
+   1. 通常用在描述具體的**狀態**或名稱，要加上對應的role或tag一起用，狀態可能要配合state動態更新。
+   2. `aria-checked`在說明這個div做出來的checked box是不是被checked了。
+   3. `aria-label`在說明這個沒有label的input，要用什麼label說明給disability的人聽。
+   4. `aria-labelledby`裡面要放有label說明的那個element的id。
+3. [cheat sheet](https://www.digitala11y.com/wai-aria-1-1-cheat-sheet/)
+4. 我猜有互動性的element才有role的必要
+5. [list of role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques#roles)

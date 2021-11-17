@@ -72,7 +72,8 @@
 1. unit tests
    1. 概念：
       1. 測試functions或classes
-      2. 最便宜，最常見，90%的時間都是寫unit tests
+      2. 最便宜，最常見，andrei認為90%的時間都是寫unit tests
+      3. 我倒是同意[kent的看法](https://kentcdodds.com/blog/static-vs-unit-vs-integration-vs-e2e-tests)，只有被隔開的獨立部份，才寫unit test。
    2. pure function：
       1. 最適合unit test
       2. 因為可以用functional programing，很方便
@@ -241,6 +242,7 @@
        6. async可以用的library：
           1. [nock](https://github.com/nock/nock)
           2. [supertest](https://www.npmjs.com/package/supertest)
+          3. [msw](https://github.com/mswjs/msw)：用service worker來mock
        7. 用redux-saga在測試方面會比redux-thunk好寫。
 
 ## Enzyme
@@ -435,13 +437,13 @@
    3. [Priority](https://youtu.be/PLL5Pvuk-tw?t=67)：
       1. `1:07`顯示query的使用順序：accessible => semantic queries => test id
       2. accessible：
-         1. getByRole
+         1. [getByRole](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques#roles)
          2. getByLabelText
          3. getByPlaceholderText
          4. getByText
       3. semantic queries
-         1. getByAltText
-         2. getByTitle
+         1. getByAltText (image的說明)
+         2. getByTitle (說明)
    4. 實作[Using Query Methods](https://www.youtube.com/watch?v=l9qr3EuLE_8&list=PL4cUxeGkcC9gm4_-5UsNmLqMosM-dzuvQ&index=7)，常用的unit test會用的assertion：
       1. `.toBeInTheDocument()`
       2. `8:33`：
@@ -503,20 +505,81 @@
               ```
 
        4. `screen.debug()`等於是`console.log`的功能。
+6. RTL不適合做unit test，如果要用RTL來做unit test的話，可以善用mocks：
+   1. [Component Unit Testing](https://www.youtube.com/watch?v=XDkSaCgR8g4)
 
 ## 總結
 
 1. [關於testing的一個特別觀點](https://medium.com/@eugenkiss/lean-testing-or-why-unit-tests-are-worse-than-you-think-b6500139a009)：
-   1. 只有隨便瞄一下，大概是說unit test無法cover到很多的code，並不划算，所以有一篇文章是寫為什麼[大部份的unit testing 是浪廢](https://rbcs-us.com/documents/Why-Most-Unit-Testing-is-Waste.pdf)。
-   2. lean testing的投資比較划算。
-   3. lean testing是指一種integration tests，而且只做重要部份的tests，這部份使用者比較會用到。
-   4. 我自己的心得：
+   1. [Write tests. Not too many](https://www.youtube.com/watch?v=Fha2bVoC8SE)
+      1. kent在工具或是library上code coverage可能可以達到100%，因為那很容易，但是在app或是產品上，並沒有什麼code coverage的數字可以參考。
+         1. 例如新創新產品，code coverage就會較低。
+         2. 成熟的小產品，code coverage就會較高。
+      2. 如果測試的東西，你的使用者並不會用到，那就是測試implement details。
+      3. implement details會造成implement困難，難以重構。
+      4. 測試種類：
+         1. static code analysis:
+            1. lint
+            2. @flow
+            3. type script
+         2. business logic：
+            1. unit test: function logic
+            2. integration test: api, server
+            3. e2e test: cypress超讚
+         3. 從static => unit => integration => e2e
+            1. 成本愈來愈高
+            2. 愈來愈慢
+            3. 問題難度愈來愈難
+            4. 問題愈來愈重要
+            5. 所以integration是最好的balance
+            6. shallow render snapshot沒什麼用
+   2. 只有隨便瞄一下，大概是說unit test無法cover到很多的code，並不划算，所以有一篇文章是寫為什麼[大部份的unit testing 是浪廢](https://rbcs-us.com/documents/Why-Most-Unit-Testing-is-Waste.pdf)。
+   3. lean testing的投資比較划算。
+   4. lean testing是指一種integration tests，而且只做重要部份的tests，這部份使用者比較會用到。
+   5. 我自己的心得：
       1. 或許寫test最大的功用，是讓自己由不同的角度看自己的code，可以更清楚了解和確認自己的code是在幹麼，確認是不是自己想的那樣。
       2. 另外可以避免自己或是其它人改code的時候改壞了。
       3. 但是這是有成本的，變成改code的時候，可能要連測試一起改。
+      4. app的unit test小心不要寫太多，常用和重要的function要做，其它的snapshot可能不是很重要。
 2. Andrei的總結：
    1. 寫tests不是為了獲得100%的code coverage。
    2. test讓你從另一個角度來看自己寫的code，有時候為了讓test能夠執行，需要重新改自己原來的code，所以有人在寫code的時候就同時寫test。
    3. 寫test在很多人合作很大的project上，能夠避免一些bugs的產生。
 3. [PJ好文](https://ithelp.ithome.com.tw/articles/10280261)
-4. 
+4. [不要mock fetch](https://kentcdodds.com/blog/stop-mocking-fetch)：
+   1. mock fetch仍然不保證fetch沒問題。
+   2. 比較慢的feedback loop
+   3. 很多重複的code
+   4. 解決方式：
+      1. [kent在paypal作法](https://kentcdodds.com/blog/stop-mocking-fetch)
+      2. [msw](https://github.com/mswjs/msw)：
+         1. service worker來模擬後端
+         2. 不是測試時可以用而已，開發時也可以來模擬後端
+         3. 甚致chrome的開發工具network頁看起來就像連往後端一樣
+         4. 這種方式可以減少在各個unit test中重複的mocking fetch，也不用在test的時候特別去處理request和response的property
+         5. 這種方式可以檢查到client端送出request的時候的property是否錯誤。
+         6. [範例](https://github.com/mswjs/examples/tree/master/examples/rest-react)
+         7. [教學文](https://tw.alphacamp.co/blog/learn-api-and-mock-service-worker)
+   5. 好處：遠離了細節，所以你可以作重大重構，而且你有信心這樣的重構不會弄壞使用者體驗，而這就是test的目的。
+
+## celerec筆記
+
+1. 用integration tests先把主邏輯先確定好。
+2. async的部份用msw來mock才方便又準確。
+   1. 照官方的doc的star一步一步做很快。
+   2. 因為test是用node環境，node底下的handlers必需用完整網址。
+3. redux可以用一個wrapper包起來用，每個測試都要包一次。
+4. event：
+   1. fireEvent
+      1. 功能比較多
+      2. 速度比較快
+      3. [種類](https://github.com/testing-library/dom-testing-library/blob/main/src/event-map.js)
+   2. userEvent
+      1. 比較逼真，例如：click就會包含mouseEnter，還有那些bubble。
+      2. 功能較少
+5. `within()`：縮小query的範圍。
+6. unit test測試functions就好了。
+7. 要注意async的測試：
+   1. 外面要加async
+   2. 裡面screen.findxxx前面要加await
+8. `ByRole`：善用chrome工具裡面的accessibility，可以看到role, name, tile...等等。
