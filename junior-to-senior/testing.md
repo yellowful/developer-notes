@@ -505,8 +505,7 @@
               ```
 
        4. `screen.debug()`等於是`console.log`的功能。
-6. RTL不適合做unit test，如果要用RTL來做unit test的話，可以善用mocks：
-   1. [Component Unit Testing](https://www.youtube.com/watch?v=XDkSaCgR8g4)
+6. RTL不適合做unit test，如果要用RTL來做unit test的話，可以善用mocks：[Component Unit Testing](https://www.youtube.com/watch?v=XDkSaCgR8g4)
 
 ## 總結
 
@@ -583,3 +582,4 @@
    1. 外面要加async
    2. 裡面screen.findxxx前面要加await
 8. `ByRole`：善用chrome工具裡面的accessibility，可以看到role, name, tile...等等。
+9. 進階assertion要import [jest-dom](https://github.com/testing-library/jest-dom)：

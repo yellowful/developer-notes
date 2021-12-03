@@ -245,7 +245,7 @@
                1. 就是一個method，名稱叫作render，只是這是React預先建立的API，之後會把這個method回傳的東西拿去render。
                2. 和一般我們自己建立的不同在於render裡面認得this是誰，而我們自己建立的function不認得，所以為了解決這個問題有兩個方法
                   1. 在constructor裡面去.bind(this)
-                  2. 用arrow function，因為arrow function沒有this，所以他的this就會是component被建立時，代表這個component。
+                  2. 用arrow function，因為arrow function沒有this，所以他的this就會是component被建立時，代表這個component，這似乎是react把它autobinding起來的。
                3. 在render()裡面設定的variable會隨著state更新而變動，每次有state更新就會跟著更新，跟hooks裡面是一樣的，所以改變view不一定是state，在render裡面被state改變的variable也可以改變view。
                4. 基於上一點，在render裡設定state和在hooks裡設定state一樣，要小心會成為無窮迴圈。
             4. this.setState()就是從super()複製而來，也就是React寫好的Component裡面已經寫好setState()的method怎麼運作了。
@@ -299,7 +299,6 @@
             3. 距離很遠的component傳遞state，改用其中之一：
                1. unstated
                2. useContext
-
 
 ## react performance
 

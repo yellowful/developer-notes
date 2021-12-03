@@ -70,10 +70,10 @@
    * 用.style就可以改變style的屬性了。
    * 用.className是attribute而不是method，可以放class的名字。
    * 用.classList可以得到class的名稱，再加上.add可以加上class，.remove可以移除class，toggle則每執行一次就加上或移除class一次。這幾個都是method而不是attribute，名字都要當作arguments放進method裡。
-   * .innerHTML也是屬性，可以改變內文，內文也可以加tag。
+   * .innerHTML也是屬性，可以改變內文，內文也可以加tag。
    * 要選父親是.parentElement，要選子卻是用.children，不用Element。
    * 使用時儘量存在變數裡，不要一直select，可以加快chrome速度。
-9. shopping list心得：
+9. [shopping list心得](https://github.com/yellowful/vanilla-javascript-exercises/blob/main/ShoppingList/original/script.js)：
    * 作法：
      * 點按鈕就會新增項目(用creatElement())。
      * 將特定文字加入新增項目(把input轉成text node元件後，用.appendChild加入list當中)。
@@ -172,13 +172,73 @@
     6. instantiation：宣告新物件時，就會產生新instant。
     7. this：<https://blog.techbridge.cc/2019/02/23/javascript-this/>
         1. 觀念非常重要，指的是所在scope的父類別的物件，注意是物件，不是類別。例如，JavaScript內建的一些函數，前面可以加上this，這個this指的是windows物件。
-        2. 「所在scope的父物件」指的是，this寫在某個class中，用這個class可以instancia出一個object，這個object可以用一些method，這些method是在class裡面定義的，所以this.method()，的this指的是這個class實體化的object，這個method所在的scope的爸爸class的object。
-        3. React中，class component如果要把爸爸component的state或function傳進來，就要用props從super傳進來，在這個class裡要用的時候，就要加上this，例如this.props，這個this指的是這個class實體化的component object，而不是爸爸component。
-        4. 有一種情況，爸爸class中有this，小孩class中也有this，而且小孩引用了爸爸的某些attribute或method有this。
+        2. 「所在scope的父類別物件」指的是，this寫在某個class中，用這個class可以instanciate出一個object，這個object可以用一些method，這些method是在class裡面定義的，所以this.method()的this指的是這個class實體化的object，這個method所在的scope的爸爸class的object。
+        3. class在instanciate的時候，就是會先把constructor裡一屬性變成一個object，this指的就是這個object。
+        4. React中，class component如果要把爸爸component的state或function傳進來，就要用props從super傳進來，在這個class裡要用的時候，就要加上this，例如this.props，這個this指的是這個class實體化的component object，而不是爸爸component。
+        5. 有一種情況，爸爸class中有this，extends的小孩class中也有this，而且小孩引用了爸爸的某些attribute或method有this。
             1. 當用小孩的class去實體化一個object的時候，小孩class和小孩class裡引用到爸爸的this，全都是指這個小孩object。這一點是很容易弄錯的，要小心。
             2. 當用爸爸的class去實體化一個object的時候，爸爸class裡的this指的當然就是這個爸爸object。
-        5. react無法把資料上傳到爸爸component，但是看起來很像把event上傳給爸爸，其實是從爸爸component下傳一個function作為property，這個function會在小孩component裡面成為property的一個attribute。讓這個function放在DOM的一個call back property裡面，當作call back function，所以在爸爸那邊，這個function就可以listent 小孩call back function的events了，爸爸這邊也可以根據聽到的event更新state。
-        6. 如果code呼叫太多this，可以用destructuring，讓程式碼比較clean。
+        6. react無法把資料上傳到爸爸component，但是看起來很像把event上傳給爸爸，其實是從爸爸component下傳一個function作為property，這個function會在小孩component裡面成為property的一個attribute。讓這個function放在DOM的一個call back property裡面，當作call back function，所以在爸爸那邊，這個function就可以listen 小孩call back function的events了，爸爸這邊也可以根據聽到的event更新state。
+        7. 如果code呼叫太多this，可以用destructuring，讓程式碼比較clean。
+        8. [四種情況下的this](https://reactkungfu.com/2015/07/why-and-how-to-bind-methods-in-your-react-component-classes/)：
+           1. function invocation：沒有`.`，直接call function，this通常就是window，以下的`fun()`的`this`仍然是window，所以`this.name`會是undefined
+
+                  ```js
+                  const unicorns = {
+                     name:'oh no',
+                     func: function() {
+                        console.log(this.name)
+                     }
+                  }
+                  unicorns.func(); // oh no
+                  var fun = unicorns.func;
+                  fun(); // undefined
+                  ```
+
+           2. method invocation：一連串的句點，this指的會是最右邊的method所在的object
+
+                  ```js
+                  var foo = {
+                     name:'foo',
+                     bar: {
+                        name:'bar',
+                        func: function() { console.log(this.name) }
+                     }
+                  };
+
+                  foo.bar.func();// bar
+                  const fun2 = foo.bar.func;
+                  fun2(); // undefined
+                  ```
+
+           3. constructor invocation：
+              1. function有兩種用法，其中一種是被`new` operator使用的用法，這種function稱為function constructor，用來建立物件，它是有[歷史淵源](https://pjchender.blogspot.com/2016/06/javascriptfunction-constructornew.html)的。
+              2. 這種用法下的function不能放return，new的時候，一開始會產生一個空的object，後來constructor裡面的attibute才會被指定值，這個function會自動`return this`，也就是等號左邊會被reference到一個object上，而這種object就叫作instance。
+
+                 ```js
+                 function dog(name){
+                    this.dogname=name;
+                    console.log('this.dogname',this.dogname);
+                    console.log('inner this',this);
+                 }
+                 dog('wow'); // 直接呼叫的話，this會是指window，之後this.dogname會被指定成'wow'
+                 console.log('window',dogname);
+                 // 這裡非常容易搞混，這裡meow會變成一個object而不是一個function，{name:undefined}
+                 const meow = new dog();
+                 console.log('meow',meow);// meow dog { dogname: undefined }
+
+                 // 因為不是直接呼叫function，是用new來操作，這時候的dog('worf')是個constructor
+                 // 一開始的this會指向一個空的object，之後把attribute給值，然後return this。
+                 const mouse = new dog('worf');
+                 console.log('mouse',mouse); // {dogname:'worf'}
+                 ```
+
+              3. ES6之後react的class和js的class的比較
+                 1. 相同的地方是arrow function會autobinding，也就是你寫的arrow function裡面的this，這個this就會是這個class被instanciate之後的object。
+                 2. 不同的地方在於：
+                    1. react的class裡的傳統function的this並沒有autobinding，在instanciate之後，this變成window。
+                    2. 而js的傳統function的this仍然有autobinding，在instanciate之後，this就變成這個instance。
+           4. apply invocation：
     8. scope：指的是所在位置的function或class裡，指的是variable做用的範圍。和context很容易被搞混，context指的是this指的是誰，只和this有關。
     9. 請參考演算法筆記「class」。
 19. Object：

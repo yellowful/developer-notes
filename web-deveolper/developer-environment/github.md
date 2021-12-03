@@ -216,8 +216,9 @@ git會做記號，刪除不要的，保留要的，解決衝突
 3. 如果是已經push上去的commit，要更動的話，要用`push -f`，如果是共用的專案，會導致變動到別人的commit，要小心使用。
 4. [改commit messages](https://gitbook.tw/chapters/rewrite-history/change-commit-message.html)：上面提到的`squash`改成`reword`就好了。
 5. [git rebase main](https://backlog.com/git-tutorial/cn/stepup/stepup2_8.html)：
-   1. 主要是為了讓main在merge別的branch的時候，commit記錄不要有別的branch記錄了。
-   2. 原來一般的作法是在main裡去merge別的branch進來，這樣commit記錄圖會看到一個分支出去的路徑，這個作法是去branch裡下`git rebase main`，這樣這個branch會消失，留下main裡多了合併這個branch的記錄。
+   1. 下完這個指令 => 處理衝突 => 記得還要再去main下`git merge branch_name`
+   2. 主要是為了讓main在merge別的branch的時候，commit記錄不要多一個merge的commit，也不要多一條分支讓線很亂。通常是在合併的commits沒什麼衝充的小更動的話，會比較適合使用。
+   3. 原來一般的作法是只有在main裡去merge別的branch進來，這樣commit記錄圖會看到一個分支出去的路徑，這個作法是先去branch裡下`git rebase main`，這樣merge完這個branch會消失，留下main裡多了合併這個branch的記錄。
 
 ## 其他常用command
 

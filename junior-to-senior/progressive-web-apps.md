@@ -68,6 +68,10 @@
          1. <https://web.dev/viewport/>
          2. 這一行是讓手機能正常顯示的，必要的。
          3. 如果沒有的話，lighthouse會顯示錯誤。
+         4. [gatsby也可以操弄index.html](https://www.gatsbyjs.com/docs/custom-html/)：
+            1. 原則上gatsby會自動加上header了，但是要自己手動加其它的header也可以。
+            2. 把`.cache/default-html.js` copy到`src/html.js`
+            3. 把你要的header放進去`html.js`裡。
       2. `manifest.json`：
          1. [各個參數的詳細說明](https://web.dev/add-manifest/)
          2. 用來定義這個app在手機上看起來怎麼樣。
@@ -81,6 +85,10 @@
             3. `index.html`裡的link的href可能要加上`%PUBLIC_URL%/`才能正常做用
             4. favicon.ico，可以改成png的，也可以自己把大圖.png加進去，寫法相同，只是格式不同。
             5. start_url要從`index.html`改成`.`
+         5. [gatsby-plugin-manifest](https://www.gatsbyjs.com/plugins/gatsby-plugin-manifest/)：
+            1. 給一個png就可以自動產生各種大小的png。
+            2. start_url是`/`。
+            3. 也可以自己手動加入icon，但要放入icons的array裡面，要注意的是size的地方`x`要小寫。
    8. service worker：
       1. 是一種瀏覽器在背景執行的script，這個script和web page是分開的。
       2. 主要執行一些不需要web page也不需要和使用者互動的功能。
@@ -109,6 +117,7 @@
           2. lighthouse：對某些service worker(包括gatsby的)有問題，會卡住，相關issue在此：
              1. <https://github.com/GoogleChrome/lighthouse/issues/13273>
              2. <https://github.com/gatsbyjs/gatsby/issues/33837>
+          3. [lighthouse有cli](https://www.npmjs.com/package/lighthouse#using-the-node-cli)：可以試試，專門測pwas的。
    9. 小遊戲：chrome藏了一個小遊戲，一但離線連不上網站，會出現一隻小恐龍，按一下空白鍵，會出現一個小孔龍的小遊戲。 
    10. [超多做PWAs的工具](https://progressivetooling.com/)
    11. 心得：
