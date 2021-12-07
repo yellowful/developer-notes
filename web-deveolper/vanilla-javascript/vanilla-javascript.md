@@ -302,11 +302,11 @@
                1. 反過來，是把要放進來的值，這些由逗號分開的值，變成array或object。
                2. 例如：
 
-                  ```JS
-                    const [a,b,...rest]=[1,2,3,4,5];
-                    console.log(rest);//[3,4,5]
-                    const {f,g,...restOfObj}={c:1,d:2,e:3,f:4,g:5}
-                    console.log(restOfObj);//{e:3,f:4,g:5}
+                  ```js
+                  const [a,b,...rest]=[1,2,3,4,5];
+                  console.log(rest);//[3,4,5]
+                  const {f,g,...restOfObj}={c:1,d:2,e:3,f:4,g:5}
+                  console.log(restOfObj);//{e:3,f:4,g:5}
                   ```
 
                3. 也是pass by value。
@@ -381,98 +381,89 @@
           1. 什麼都沒有
           2. undefined，其實和什麼都沒有一樣
           3. null
-26. ZTM可能有更新的地方：
-    1. 第1節course outline
-    2. 77節課更新網址
-    3. 84節property名稱改變
-    4. 97節solution:Prettify
-    5. 99節career of a web developer
-    6. 144節es5和es6
-    7. 146節advaced functions
-    8. 164節課ES2020
-    9. 第187堂 GitHub master => main
-    10. 201節課latest node.js NPM
-    11. 225節課excise react 17
-    12. 230節課react hooks+redux
-    13. 241節課ES220: allSettled()
-    14. 251,253,254節課clarifai API
-    15. 259introduction to node.js
-    16. 263 es2020:globalThis
-    17. 266 ES6 Modules in Node
-    18. 269 Introduction to Express.js
-    19. 304 setting up your database
-    20. 315 deploying our files
-    21. section 31 extra learning: react hooks
-    22. 353 redux toolkit
-    23. 360 popular tools for react + redux
-    24. Andrea：
-        Lecture 164: ES2020 Part 1
-            big int
-            nullish coalescing operator ??
-            optional chaining operator ?.
-        Lecture 165: ES2020 Part 2
-        Lecture 166: ES2020 Part 3
-        Lecture 167: Exercise: ES2020
-        Lecture 201: Update to Latest Node.js and NPM
-        Lecture 204: Why Update Packages?
-            github security alerts會顯示需要更新的版本
-            <https://semver.npmjs.com>
-                可以看版本穩定度
-                ^: 某一大版
-                >=: 大於等於某一版
-        Lecture 224: Keeping Your Projects Up to Date
-            npm update
-            手動
-            --force
-        Lecture 225: Exercise: React 17
-        Lecture 226: Solution: React 17
-        Lecture 241: ES2020: allSettled()
-            取代Promise.all()，Promise.allSettled()讓resolve和reject都會跑。
-        Lecture 253: Clarifai API Updates, Models and Troubleshooting
-            介紹各種model
-        Lecture 259: Introduction To Node.js
-            有：
-                global
-                process
-                process.exit()
-            沒有：
-                window
-                global.fetch
-                document
-        Lecture 263: ES2020: globalThis
-            globalThis用來統一window和global，讓node和browser的程式碼可以統一
-        Lecture 266: ES6 Modules In Node
-            可以用import了
-                方法1：在package.json裡面加上`"type": "module"`
-                方法2:副檔名改成mjs
-        Lecture 315: Deploying Our Files
-            說明為什麼要從local deploy到雲端
-                不用開電腦
-                前後端和database都可以在不同的地方
-        Lecture 339: React Hooks
-            說明作為一個developer，無可避免遇到工具演化，要如何面對呢？
-        Lecture 340: React Hooks 2
-            第一要了解動機：
-                1. 類似的component難以重新利用，所以才會寫wrapper component，來解決這個問題。但是一堆wrapper仍然會讓程式碼很難讓人了解。
-                2. class component太複雜了，還有一堆lif cycle，hooks的方式比較讓人容易了解。
-                3. class不好用，hooks只需要function，讓做出來的component多了很多的可能性，可能和angular、可能和其他東西共用。
-        Lecture 341: React Hooks 3
-            npm update
-        Lecture 342: React Hooks 4
-            看著document自己改成hooks
-        Lecture 343: React Hooks 5
-            把constructor刪掉
-            把render刪掉
-            最後帶出如何處理this.state？
-        Lecture 344: React Hooks 6
-            hooks裡的array是javascript的新功能，是一種destructure，讓我們可以替state和setstate命我們喜歡的名字。
-        Lecture 345: React Hooks 7
-            本身state的更新，會讓自己本身render。
-            useEffect：
-                function component載入的時候會render，更新的時候也會render，而useEffect如果沒有設定第二個arguments的時候，一旦state更新，本身會rerender，所以useEffect裡面的function也會又render更新state，然後就變成無限迴圈了。
-                第二個arguments
-                    如果第二個arguments有的話，第二個arguments有變動才會跑第一個arguments裡的function。
-                    設成[]，永遠都不會變動，所以只有component載入時會跑第一次。
-        Lecture 346: React Hooks 8
-            證明了第二個parameter變動的時候，第一個parameter的function會run
-        Lecture 348: React Hooks 9
+
+## 其它
+
+1. [event propagation](https://www.30secondsofcode.org/articles/s/javascript-event-bubbling-capturing-delegation)：
+   1. 有三個phase
+      1. capture phase：祖先朝子孫，要用時，在addEventListener的第三個參數設成true
+      2. target phase：子孫
+      3. bubble phase：子孫朝祖先
+   2. delegation
+      1. 作法：
+         1. 利用event propagation的特性，只需要在祖先的地方加上event listener，就可以聽到子孫的event。
+         2. 用這個祖先的event handler來處理判斷，要對哪個子孫做反應。
+      2. 優點：
+         1. 只需要下一個listener，就可以監聽到大量的子孫，不用對每一個子孫下event listener，減少記憶思的消耗。
+         2. 可以對動態的elements進行監聽，而且不需要對這個elements進去listener的註冊或是解除註冊。
+      3. [由一個實例得到以下幾個原則](https://hsien-w-wei.medium.com/dom-event-propagation-ii-%E4%BA%8B%E4%BB%B6%E5%8F%AF%E4%BB%A5%E5%A7%94%E8%A8%97-event-delegation-ecccb019a48e)：
+         1. 不是arrow function的情況下，event handler function的this指的是註冊這個event listener的element，註冊在祖先就是祖先，註冊在子孫就是子孫。
+         2. 如果event發生在子孫
+            1. 祖先的event.target指的是子孫。
+            2. 祖先的event handler會比子孫的event handler晚執行，因為bubble phase發生在target phase之後。
+            3. 如果capture phase設成true，那麼祖先的event handler會比子孫的event hanler早執行，因為capture phase發生在target phase之前。
+
+## ES新語法
+
+Lecture 164: ES2020 Part 1
+   big int
+   nullish coalescing operator ??
+   optional chaining operator ?.
+Lecture 165: ES2020 Part 2
+Lecture 166: ES2020 Part 3
+Lecture 167: Exercise: ES2020
+Lecture 241: ES2020: allSettled()
+   取代Promise.all()，Promise.allSettled()讓resolve和reject都會跑。
+Lecture 263: ES2020: globalThis
+   globalThis用來統一window和global，讓node和browser的程式碼可以統一
+Lecture 263 es2020:globalThis
+
+## ZTM更新
+
+### 2021更新未整理
+
+251,253,254節課clarifai API
+Lecture 253: Clarifai API Updates, Models and Troubleshooting
+   介紹各種model
+
+Lecture 315: Deploying Our Files
+   說明為什麼要從local deploy到雲端
+      不用開電腦
+      前後端和database都可以在不同的地方
+
+### 2022更新
+
+-------------------------------
+Junior to Senior Web Developer Roadmap: 🛤️ 
+IMPORTANT: Thinking Like A Senior Developer
+Angular vs React vs Vue
+-CWD: React + Redux- section
+Setting Up Jest
+Updating to the Latest Version of Next.js
+Static vs SSR vs CSR: Gatsby.js vs Next.js vs React.js
+Opt-In Service Worker in CRA
+
+-------------------------------
+Complete React Developer in 2022: Zero to Mastery: :react~3: 
+Note: we will be adding React 18 lectures when it is officially out!
+Create React App - NPX
+Create React App - React-Scripts 1
+Create React App - React-Scripts 2
+Create React App - Everything Else
+Hooks vs Classes
+React-Redux Hooks
+useDispatch
+useParams Part 1
+useParams Part 2
+useState Part 1
+useState Part 2
+useEffect Part 1
+useEffect Part 2
+useEffect Part 3
+useMemo
+useLayoutEffect
+
+-------------------------------
+JavaScript: The Advanced Concepts: :JavaScript: 
+ES2021
+ES2021: any()

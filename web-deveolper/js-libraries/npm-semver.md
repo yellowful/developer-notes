@@ -38,3 +38,23 @@
 
 1. Semantic Versioning版本命名
 2. 功能大改.功能小改.bug修復
+
+Lecture 204: Why Update Packages?
+   github security alerts會顯示需要更新的版本
+   <https://semver.npmjs.com>
+      可以看版本穩定度
+      ^: 某一大版
+      >=: 大於等於某一版
+Lecture 259: Introduction To Node.js
+   有：
+      global
+      process
+      process.exit()
+   沒有：
+      window
+      global.fetch
+      document
+Lecture 266: ES6 Modules In Node
+   可以用import了
+      方法1：在package.json裡面加上`"type": "module"`
+      方法2:副檔名改成mjs
