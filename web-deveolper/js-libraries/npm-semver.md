@@ -33,6 +33,8 @@
    2. `"scripts":{"browserify script.js > bundle.js && live-server"}`
    3. 在command line裡：
    4. `npm run build`
+9. [nvm](https://www.sitepoint.com/quick-tip-multiple-versions-node-nvm/)：
+   - 可以讓不同的project用不同的node版本。
 
 ## semver
 
