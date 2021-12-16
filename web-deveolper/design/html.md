@@ -69,6 +69,7 @@
 1. role：
    1. 用在非標準tag，例如用div做出來的button。
    2. 標準的tag不用加role，因為本身就可以被唸出來。
+   3. [role的種類](https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/blob/master/docs/rules/no-noninteractive-element-interactions.md)分為non-interactive的和no-noninteractive的。
 2. aria：Accessible Rich Internet Application
    1. 通常用在描述具體的**狀態**或名稱，要加上對應的role或tag一起用，狀態可能要配合state動態更新。
    2. `aria-checked`在說明這個div做出來的checked box是不是被checked了。

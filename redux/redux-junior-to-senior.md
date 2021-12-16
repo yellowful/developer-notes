@@ -115,13 +115,13 @@
    1. 可以。
    2. 同一個type可以影響到很多不同的states，這些states如果分佈在不同的reducers裡，那麼這些type就可能出現在不同的reducers裡面，然後把這些payload送給這些不同的reducer的state。
 5. action.js裡的function一定要return或是dispatch actions嗎？
-   1. 不用，這裡面的function可以是純邏輯，單純呼叫其它function。
+   1. 不用，這裡面的function可以是純邏輯，單純用dispatch去呼叫其它function。
    2. 需要觀察的地方才return或是dispatch對應的action就好。
 6. 由上面幾點可以看得出雖然action creator需要把action丟出來給reducer處理，但是這兩者並不需要相互對應，是可以完全decouple的，所以可以不用把modal和controller的邏輯和view完全的綁在一起，卻又可以利用action把modal和controller的邏輯經過reducer和view相互對應在一起。
 7. redux這樣做容易找到bug的原因在於。
    1. 我們發現view不如預期時，可以從redux的工具裡看到各個action和state的順序，發現是卡在哪一個state或是action，可以由type去找到相對應的function或是action creator的問題。
    2. `state正不正確 => 對應的action發生順序正不正確`
-8. 我覺得主要邏輯放action比放reducer好一點，最好某一個payload或state的邏輯兩邊都放，這樣會造成以後改code的時候，兩邊要同時改，容易漏掉。
+8. 我覺得主要邏輯放action比放reducer好一點，如果某一個payload或state的邏輯兩邊都放，這樣會造成以後改code的時候，兩邊要同時改，容易漏掉。
 9. 把form和redux連接：
    1. 最複雜的地方是這樣流的，兩條路線：
       1. 把相關的action creator丟給mapDispatchToProps，丟進connect裡面。
@@ -136,14 +136,14 @@
 1. 把view會用到的state或是props挑出來，丟到mapStateToProps。
 2. 把view會用到的function挑出來，丟到mapDispatchToProps。
 3. 把這些function丟到actions.js裡，並export出來，讓container components可以import給mapDispatchToProps。
-4. 把其它不是view相關的function丟到actions裡，不需要export出來。
-5. actions裡處理這些functions之間的關係，所有的setState，都變成return actions或是dispatch actions。
+4. 把其它不是view相關的function丟到actions裡，**不需要export出來**。
+5. actions裡處理這些functions之間的關係，**所有的setState，都變成return actions或是dispatch actions**。
 6. actions裡的function呼叫其它function可以用dispatch來呼叫，thunk會去執行。
 7. reducers可以進行分類，同一類的state可以放一個reducers。
 8. mapStateToProps要依reducer的分類來訂閱。
 9. reducer裡的state有三種：
    1. 是給view用的，就要用mapStateToProps來訂閱。
-   2. 不是給view用，但是要給action裡面的function用的，類似global variable，要用`getState()`來要，thunk會從第二個parameter傳進action creator裡。例如form裡的資料，就是這樣丟給fetch相關的function，讓他們可以拿這資料去fetch後端。
-   3. 純粹記錄app狀態，沒有要給誰用。
-10. `reducer.js`檢查initial state只能有負責的state，不能有別的reducer的state在裡面。
+   2. 不是給view用，但是要給action裡面的function用的，類似global variable，要用`getState()`來要，thunk會從第二個parameter傳進action creator裡(第一個parameter是dispatch)。例如form裡的資料，就是這樣丟給fetch相關的function，讓他們可以拿這資料去fetch後端。
+   3. 純粹記錄app狀態，沒有要給誰用，當作console.log來用。
+10. 檢查`reducer.js`的initial state只能有負責的state，不能有別的reducer的state在裡面。
 11. 檢查action creator所dispatch或是return的actions的payload，裡面的state不能相同的key value pair丟給不同的reducers。

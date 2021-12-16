@@ -63,7 +63,7 @@
       1. shouldComponentUpdate
          1. 用在class component，這個class component會放在別的地方，很可能每次都被render，加了shouldComponentUpdate可以決定這個class component要不要在那個地方被render，通常最常見的就是比較前一個state和這個state相不相同，不相同才就return true，這個component才會被render。
          2. shouldComponentUpdate有兩個parameter，第一個是爸爸傳下來的props，第二個是這個component的state，這都是還沒render的時候。props比states早，要render時，就是props變成states來render。所以通常這裡面就是比較即將要render的prop和原本的state相互比較，如果沒有不同就不用render。其實很常見的是只比較props或states裡面某一個特別重要的屬性而已。
-      2. `...extends React.Component()`改成`...extends React.PureComponent{}`，就會自動幫你處理shouldComponentUpdate裡面在做的事了，也就是說shouldComponentUpdate就是單純的props和state的話，就直接用`PureComponent`比較方便。
+      2. `...extends React.Component()`改成`...extends React.PureComponent{}`，就會自動幫你處理shouldComponentUpdate裡面在做的事了，也就是說shouldComponentUpdate就是單純的props和state，沒有需要對props和state要特殊邏輯的判斷，就直接用`PureComponent`比較方便。
    2. functional component
       1. 用的就是export的時候用React.memo(functional component)。
       2. memo就是memoization，類似快取起來。
@@ -75,15 +75,18 @@
    1. 要解決的問題：hooks裡定義的function，每次rerender，這個function都會被重新initialize，假如這個function根本就沒有dependency，每次都是一樣不會改變，那沒有必要每次都被initiate，這久了會造成memory leak，這時就可以用useCallback。
    2. 證明每次都被initiate：
       1. javascript的`new Set()`只會把有新的東西放進array裡，這裡會用它來判斷是不是有新的object或是array(也就是新的reference)加進這個變數裡，如果只是object或是array裡的值變動，就不會有變化。
-      2. 用Set測出某一個不需要新的function被一直initiate的時候，卻一直被initiate，這會一直增加佔住的記憶體，最後造成memory leak。這是因為這個functional component一更新就會被render，這時候就可以把這個function放入useCallback裡面。
+      2. function也是一個object，用Set測出某一個不需要新的function被一直initiate的時候，卻一直被initiate，這會一直增加新的reference佔住的記憶體，最後造成memory leak。
+      3. 上一點是因為這個functional component的state一更新就會被re-render，re-render就又造成function被initiate，如果有大量的even handler時就真的會出問題了，解決方式是把這個function放入useCallback裡面。
+      4. 這裡要注意的是這個`new Set()`要設在function外面，才不會每次re-render的時候Set又被`new`了一次。
    3. useCallback第一個參數放不要被重覆initiate的function，第二個參數和useEffect一樣，放dependency。
-   4. 如果useCallback的第二個參數放空array，就是每次第一個參數的function都是被memoized，reference就不會變，所以用Set來測試有沒有新object的變數就不會不斷變大。
+   4. 如果useCallback的第二個參數放空array的時候
+      1. 就是每次第一個參數的function都是被memoized，reference就不會變，所以用Set來測試有沒有新object的變數就不會不斷變大。
+      2. useCallback第一次會看這個function還沒initiate，所以會把他做第一次initiate，如果是event handler，則是第一次被按的時候會被initiate，接著再按的時候，因為第二個參數沒有任何state變化，所以第一個參數的function就不會再被initiate了。
    5. 如果第二個參數有放某個state，就只有那個state改變時，這個function才會被initiate。
-   6. 第二個參數放空的array的時候，useCallback第一次會看這個function還沒initiate，所以會把他做第一次initiate，如果是event handler，則是第一次被按的時候會被initiate，接著再按的時候，因為第二個參數沒有任何state變化，所以第一個參數的function就不會再被initiate了。
-   7. 使用的時機有二個：
+   6. 使用的時機有二個：
       1. 這個component很多不同的handler都會更新這個conponent的state，而這個component也會一直被rerender，這些不同的handler之間並不相互依賴，這樣會造成一堆不需要被宣告的handler一直不必要的被宣告。
       2. [useCallback和useMemo](https://medium.com/ichef/%E4%BB%80%E9%BA%BC%E6%99%82%E5%80%99%E8%A9%B2%E4%BD%BF%E7%94%A8-usememo-%E8%B7%9F-usecallback-a3c1cd0eb520)：function要被多個地方使用，但是只有一個地方會因state或是props改變，這時候可以用useCallback，把這個function放裡面，就不容易造成memory leak。
-   8. 如上篇文章提到的，如果function要被多個地方使用，但是跟state和props無關，這時候就把function宣告在component外面就好了，就不會每次rerender都被initiate了，可以不需要useCallback。
+      3. 如上篇文章提到的，如果function要被多個地方使用，但是跟state和props無關，這時候就把function宣告在component外面就好了，就不會每次rerender都被initiate了，可以不需要useCallback。
 5. useMemo和useCallback很像：
    1. useCallback是memoize一個function的reference，而useMemo是memoize一個function的value，這個function通常不是event handler。
    2. 只有第二個參數裡的state有變化的時候，第一個參數裡的function才會重新計算。
@@ -93,8 +96,7 @@
 6. 其它參考文章：
    1. [useCallback](https://ithelp.ithome.com.tw/articles/10225504)
       1. `const function`會造成每次render會重新佔一次memory，造成memory leak。
-      2. 用useCallback根據dependency來決定這個function和下一次render的function是不是要重新佔一次memory，一種玩法是把這個useCallback回來的東西放入useEffect的dependency裡面來決定要不要跑useEffect第一個參數的東西。
-   2. 
+      2. 用useCallback根據dependency來決定這個function和下一次render的function是不是要重新佔一次memory，一種玩法是把這個useCallback回來的東西放入useEffect的dependency的array裡面來決定要不要跑useEffect第一個參數的東西，其實和useEffect的dependency放一個空array是一樣的效果，因為useCallback回來的東西是reference到同一個function，等於是沒有dependency，但是可以解決eslint發出的warning，這個warning是擔心useEffect裡的第一個參數其實是有dependency的，我想真正這種作法意義不大。
 
 node.js沒有預設gzipping，所以後端server要灌套件[compresstion](https://www.npmjs.com/package/compression)
 
@@ -117,3 +119,17 @@ Set的用法：
 
 
 [profiler compnent](https://reactjs.org/docs/profiler.html#usage)：可以包住要測量的component，console.log()出結果。
+
+[shallow compare](https://medium.com/@xyz030206/react-%E6%95%88%E8%83%BD%E5%84%AA%E5%8C%96-purecomponent-f971fb56f90a)：
+
+1. 淺層比較。
+2. 以下兩點同時符合，會認為相同：
+   1. 值相同
+   2. reference相同
+3. 依上一點來比較，當一個object淺層相同，深層不同的時候，會被判為相同，因為淺層的reference和key和value都會相同，深層則是reference相同，就不再比較深層的value了。
+4. 所以react的this.state要小心不要設定value是個object，最好把attribute獨立成一個state，這樣state相同相異的判斷才不會出現非預期的情況。
+
+## state更新就立即執行
+
+1. 在react裡面叫作setState的callback function，就是把setState的第二個參數放一個callback function，這樣state更新完會立即執行callback function裡面的事情。
+2. [hooks](https://stackoverflow.com/questions/56247433/how-to-use-setstate-callback-on-react-hooks)：hooks的setState沒有第二個參數可以放，但是可以用useEffect達成相同的功能，也就是在useEffect的第一個參數裡放上一個callback function，把要做的事情放在裡面，第二個參數放對應需要判斷的state，這樣state一更新，callback function就會被執行。

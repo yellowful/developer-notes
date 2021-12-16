@@ -47,6 +47,7 @@
 現在github要求主要branch要改成main，不能用master：
 
 1. 把local端改成main的指令是`git branch -m master main`
+   - 事實上任何的branch改名都是用這個指令`git branch -m OLD-BRANCH-NAME NEW-BRANCH-NAME`
 2. 把遠端改成main的指令是`git push -u origin main`
 3. 登入github，切到main branch之後，把main branch設成default。
 4. 把push的遠端master刪除：`git push origin --delete master`
@@ -256,6 +257,7 @@ git會做記號，刪除不要的，保留要的，解決衝突
             1. `git tag v0.1.0 -a -m '附註訊息'`：直接貼在現在的commit上
             2. `git tag tag_name commit_sha1 -a -m '附註訊息'`：貼在想貼的commit上
             3. 背後原理：tags和branch很像，branch是一個會跟著commits走的head，tags則是不跟著commits前進，永遠停在某一個commits的sha值，指向那個commits。
+            4. 要修改以前的tag的message，用`git tag v1.2.1 v1.2.1^{} -f -m "<new message>"`
       3. [實戰](https://blog.hellojcc.tw/a-better-git-flow/)
          1. 開源專案基本上還要加上git-flow，因為大版本的bug需要開一個branch繼續一直修bug下去。
          2. git tag有版本當作tag，所以可以方便記錄版本差異。
@@ -314,6 +316,12 @@ git會做記號，刪除不要的，保留要的，解決衝突
     現在看起來只給企業用戶使用  
     或是可以去jekyll用：  
     `https://jekyllrb.com`
+
+## git相關的業界術語
+
+1. `mr:` = merge request
+2. `Br:` = branch
+3. `WIP:` = working in progress，發了mr後發現要修正，希望別人先不要幫你merge，可以在標題前面加上WIP
 
 ## 其它資源
 

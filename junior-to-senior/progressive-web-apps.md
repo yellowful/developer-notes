@@ -74,6 +74,8 @@
             3. 把你要的header放進去`html.js`裡。
       2. `manifest.json`：
          1. [各個參數的詳細說明](https://web.dev/add-manifest/)
+            1. `standalone`：沒有回上一頁的UI
+            2. `minimal-ui`：有回上一頁的UI
          2. 用來定義這個app在手機上看起來怎麼樣。
          3. 在手機上如何啟動，例如：桌面上。
          4. [realfavicongenerator](https://realfavicongenerator.net/)
