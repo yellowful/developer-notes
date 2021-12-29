@@ -50,7 +50,7 @@
 
 ## type script 的泛型
 
-1. [參考系列文章](https://ithelp.ithome.com.tw/users/20103315/ironman/4764?page=3)
+1. [參考系列文章](https://ithelp.ithome.com.tw/users/20103315/ironman/4764?page=1)
 2. 泛型：
    1. 型別可以當成變數傳進去型別裡
    2. 用`< >`

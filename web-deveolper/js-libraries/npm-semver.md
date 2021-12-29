@@ -35,6 +35,9 @@
    4. `npm run build`
 9. [nvm](https://www.sitepoint.com/quick-tip-multiple-versions-node-nvm/)：
    - 可以讓不同的project用不同的node版本。
+10. npx：
+    1. 讓每一個app都保有他自己版本的dependencies，例如新的create-react-app都是用npx指令。
+    2. 使用`npx create-react-app`的時候，可能出現錯誤訊息，要你先globally移除舊版的`create-react-app`，事實上用`sudo npm uninstall -g create-react-app`之後，再用`npx create-react-app`仍然會出現一樣的錯誤訊息，解決方法是先下一個`npx clear-npx-cache`，把快取清掉，之後就可以正常使用`npx create-react-app`了。
 
 ## semver
 

@@ -144,141 +144,7 @@ almanac有詳列property
     5. 容易忘記的class：
        1. input-reset：讓ios的input不會變形
        2. button-reset：讓按完button不會有很醜的藍色外框
-16. bulma：
-    1. 算是精簡版和純css的bootstrap。
-    2. 與社辦自由度較低，為了增加自由度，最好用自訂變數的用法：
-       1. <https://bulma.io/documentation/customize/with-node-sass/>
-       2. 開一個自訂css的sass專案。
-       3. 灌node sass和bulma進去。
-          `npm install node-sass --save-dev`
-          `npm install bulma --save-dev`
-       4. 改package.json：
-
-          ```javascript
-            "scripts": {
-            "css-build": "node-sass --omit-source-map-url sass/mystyles.scss css/mystyles.css",
-            "css-watch": "npm run css-build -- --watch",
-            "start": "npm run css-watch"
-          }
-          ```
-
-       5. 把你要自訂的功能和class貼進去html。
-       6. 把要自訂的變數貼入後，再匯入bulma.sass
-          @charset "utf-8";
-          自訂的變數
-          @import "../node_modules/bulma/bulma.sass";
-       7. 看結果：`npm start`
-       8. 編譯成css：`npm run css-build`
-       9. 把編譯完的css檔放到react的js檔裡面去import，react app不用再灌bulma。
-    3. 自訂的話：
-       1. 如果針對某個component，用更動component的變數，比較好，就不會去動到大家其他的變數。
-       2. 可以import必要的.sass檔就好了，就不用匯入整個bulma.sass，比較不會有class name conflic發生。
-       3. 特別是elements和components最好不要全部匯入，很容易衝突。
-17. scss：<https://www.youtube.com/watch?v=roywYSEPSvc>
-    1. 檔名用底線開頭不會被compile，其他會被compile成個別的css檔。
-    2. 匯入其他檔案：`@use ‘檔名’；`或是`@import '檔名'；`
-    3. mixin：
-       1. 和`@function`很像，function會return值，`@mixin`不會，`@mixin`是設定屬性。
-       2. 引用的時候要有`@include`，而`@function`不需要`@include`。
-       3. `@content`：代表呼叫這個mixin時的設定，要放在哪裡，例如：
-
-       ``` scss
-            @mixin desktop{
-                @media(min-width:#{$desktop}){
-                    @content
-                }
-            }
-            body{
-                font-family:'Montserrat';
-                margin:0;
-                #bg {
-                    width:100%;
-                    height:100%;
-                    @include desktop{
-                        width:80%;
-                        height:80%;
-                    }
-                }
-            }
-       ```
-
-    4. extend：
-       1. 關鍵字是`%`和`@extend`
-       2. 主要可以創建一些共用的css，不用repeat yourself。
-
-        ```scss
-            %message-shared{
-                border:1px solid #ccc;
-                padding:10px;
-                color:#333;
-            }
-            .message{
-                @extend %message-shared;
-            }
-            .success{
-                @extend %message-shared;
-                border-color:green;
-            }
-        ```
-
-    5. 邏輯：`@if`和`@else`
-    6. 替代parent的符號：`&`
-    7. 內建function：
-       1. 顏色變淡：`lighten(顏色,10%)`
-       2. 顏色變深：`darken(顏色,10%)`
-       3. 測量亮度(例如背景色)：`lightness(變數)`
-    8. Loop：
-       1. 關鍵字：`(item1,item2....)`,`@each in`,`#{item}`
-       2. 像是JS的forEach的用法，可以用來做出多個class，例如m-1,m-2,p1,p2之類的。
-
-        ```scss
-            $space-amounts = (1,2,3,4,5);
-            @each $space in  $space-amounts {
-                .m-#{$space}{
-                    margin:#{space} em;
-                }
-                .p-#{$space}{
-                    padding:#{space} em;
-                }
-            }
-        ```
-
-    9. 多層變數的用法：
-       1. 關鍵字：
-          1. `$變數`：外層變數要`$`，內層變數不用`$`
-          2. `();`：是小括號不是大括號
-          3. `逗號`：內層變數是逗號結尾，不是分號結尾
-          4. `map-get(外層變數,內層變數)`：呼叫內層變數的時候是用這個function呼叫
-       2. 範例：
-
-        一般的用法：
-
-        ```scss
-            $color:(
-                primary:#005DFF,
-                second:#FFF6BB
-            );
-            body{
-                background-color:map-get($color,primary);
-            }
-        ```
-
-        比較漂亮的寫法：
-
-        ```scss
-            $color:(
-                primary:#005DFF,
-                second:#FFF6BB
-            );
-            @function color($color-name){
-                map-get($color,$color-name)
-            }
-            body{
-                background-color:color(primary);
-            }
-        ```
-
-18. 其他：
+16. 其他：
     1. ::before和::after：
        1. 主要是在原來的tag「內」的content「前」和「後」，加入東西。
        2. 裡面可以加上屬性content:“內容”，如此可以不用用html而達到插入網頁內容的功能。
@@ -292,3 +158,152 @@ almanac有詳列property
        2. max-with：還沒碰到div邊緣，也不會再更大。
     4. 要緊密綁在一起的東西，可以用table把東西都綁在一起。
     5. 字型：在`@font-face`裡面，`font-display:swap`代表先載入瀏覽器字型，之後再切換要用的字型。
+
+## Less, Sass, Scss 預處理器
+
+1. 三者不同之處：
+   1. Sass和Scss很像，只是Sass和python一樣是縮排格式，Scss和JS一樣是{}格式。
+   2. 變數開頭不同：
+      1. Less：`@`
+      2. Scss：`$`
+   3. 功能不同：
+      1. Less有基本的變量，繼承，運算，函數功能。
+      2. Scss多了一些功能。
+   4. css函式庫：
+      1. Bootstrap：Less
+      2. Bulma：Scss
+2. [scss教學影片](https://www.youtube.com/watch?v=roywYSEPSvc)：
+   1. 檔名用底線開頭不會被compile，其他會被compile成個別的css檔。
+   2. 匯入其他檔案：`@use ‘檔名’；`或是`@import '檔名'；`
+   3. mixin：
+      1. 和`@function`很像，`@function`會return值，`@mixin`不會，`@mixin`是設定屬性。
+      2. 引用的時候要有`@include`，而`@function`不需要`@include`。
+      3. [參考](https://ithelp.ithome.com.tw/articles/10156850)
+      4. `@content`：代表呼叫這個mixin時的設定，要放在哪裡，例如：
+
+         ``` scss
+         @mixin desktop{
+           @media(min-width:#{$desktop}){
+              @content
+           }
+         }
+         body{
+           font-family:'Montserrat';
+           margin:0;
+           #bg {
+             width:100%;
+             height:100%;
+             @include desktop{
+               width:80%;
+               height:80%;
+             }
+           }
+         }
+         ```
+
+   4. extend：
+      1. 關鍵字是`%`和`@extend`
+      2. 主要可以創建一些共用的css，不用repeat yourself。
+
+         ```scss
+         %message-shared{
+           border:1px solid #ccc;
+           padding:10px;
+           color:#333;
+         }
+         .message{
+           @extend %message-shared;
+         }
+         .success{
+           @extend %message-shared;
+           border-color:green;
+         }
+         ```
+
+   5. 邏輯：`@if`和`@else`
+   6. 替代parent的符號：`&`
+   7. 內建function：
+      1. 顏色變淡：`lighten(顏色,10%)`
+      2. 顏色變深：`darken(顏色,10%)`
+      3. 測量亮度(例如背景色)：`lightness(變數)`
+   8. Loop：
+      1. 關鍵字：`(item1,item2....)`,`@each in`,`#{item}`
+      2. 像是JS的forEach的用法，可以用來做出多個class，例如m-1,m-2,p1,p2之類的。
+
+         ```scss
+         $space-amounts = (1,2,3,4,5);
+         @each $space in  $space-amounts {
+           .m-#{$space}{
+             margin:#{space} em;
+           }
+           .p-#{$space}{
+             padding:#{space} em;
+           }
+         }
+         ```
+
+   9. 多層變數的用法：
+      1. 關鍵字：
+         1. `$變數`：外層變數要`$`，內層變數不用`$`
+         2. `();`：是小括號不是大括號
+         3. `逗號`：內層變數是逗號結尾，不是分號結尾
+         4. `map-get(外層變數,內層變數)`：呼叫內層變數的時候是用這個function呼叫
+      2. 範例：
+
+         一般的用法：
+
+         ```scss
+         $color:(
+           primary:#005DFF,
+           second:#FFF6BB
+         );
+         body{
+           background-color:map-get($color,primary);
+         }
+         ```
+
+         比較漂亮的寫法：
+
+         ```scss
+         $color:(
+           primary:#005DFF,
+           second:#FFF6BB
+         );
+         @function color($color-name){
+           map-get($color,$color-name)
+         }
+         body{
+           background-color:color(primary);
+         }
+         ```
+
+3. bulma：
+   1. 算是精簡版和純css的bootstrap。
+   2. 自由度較低，為了增加自由度，最好用自訂變數的用法：
+      1. <https://bulma.io/documentation/customize/with-node-sass/>
+      2. 開一個自訂css的sass專案。
+      3. 灌node sass和bulma進去。
+         `npm install node-sass --save-dev`
+         `npm install bulma --save-dev`
+      4. 改package.json：
+
+         ```js
+         "scripts": {
+           "css-build": "node-sass --omit-source-map-url sass/mystyles.scss css/mystyles.css",
+           "css-watch": "npm run css-build -- --watch",
+           "start": "npm run css-watch"
+         }
+         ```
+
+      5. 把你要自訂的功能和class貼進去html。
+      6. 把要自訂的變數貼入後，再匯入bulma.sass
+         @charset "utf-8";
+         自訂的變數
+         @import "../node_modules/bulma/bulma.sass";
+      7. 看結果：`npm start`
+      8. 編譯成css：`npm run css-build`
+      9. 把編譯完的css檔放到react的js檔裡面去import，react app不用再灌bulma。
+   3. 自訂的話：
+      1. 如果針對bulma某個component，用更動component的變數，比較好，就不會去動到大家其他的變數。
+      2. 可以import必要的.sass檔就好了，就不用匯入整個bulma.sass，比較不會有class name conflic發生。
+      3. 特別是elements和components最好不要全部匯入，很容易衝突。

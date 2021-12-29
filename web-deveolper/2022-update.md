@@ -37,7 +37,7 @@
 ### lecture 145: jQuery
 
    1. 以前瀏覽器並不支援所有javascript的語法，所以要上caniuse.com查，而jQuery解決了這個問題。
-      範例：
+      jQuery範例：
          如果html裡要把js放在這裡面：
 
          ```js

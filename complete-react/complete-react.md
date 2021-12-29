@@ -133,3 +133,11 @@ Set的用法：
 
 1. 在react裡面叫作setState的callback function，就是把setState的第二個參數放一個callback function，這樣state更新完會立即執行callback function裡面的事情。
 2. [hooks](https://stackoverflow.com/questions/56247433/how-to-use-setstate-callback-on-react-hooks)：hooks的setState沒有第二個參數可以放，但是可以用useEffect達成相同的功能，也就是在useEffect的第一個參數裡放上一個callback function，把要做的事情放在裡面，第二個參數放對應需要判斷的state，這樣state一更新，callback function就會被執行。
+
+## HOC
+
+Higher Order Component：
+   [例如PrivateRoute](https://github.com/yellowful/dqhome/blob/main/src/components/PrivateRoute/PrivateRoute.js)：
+
+   1. 先用`<Router>`把`<PrivateRoute />`包起來，在`<PrivateRoute />`設path並傳一個component進去。
+   2. 這時候的`<PrivateRoute />`就是一個HOC，我們傳一個component進去，然後這個component會render東西出來，這邊就是null或是傳進去的component。

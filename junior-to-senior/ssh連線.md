@@ -51,3 +51,55 @@
 5. [rsync](https://www.tecmint.com/rsync-local-remote-file-synchronization-commands/)：第12堂課
    1. 並不是像icloud一樣自動同步兩個資料夾。
    2. 是下不同的指令，讓兩個資料夾，以不同的方式來拷貝或同步。
+
+## vpn
+
+[globalprotect用在big sur](https://docs.paloaltonetworks.com/globalprotect/5-1/globalprotect-app-user-guide/globalprotect-app-for-mac/download-and-install-the-globalprotect-app-for-mac.html)
+
+1. 你需要先有GlobalProtect portal(公司那一端，管理員那一端)給你的IP或是FQDN，才能下載和安裝GlobalProtect App。
+2. Catalina以後的版本，或是GlobalProtect app5.1.4以後的版本，你第一次安裝GlobalProtect App的時候，會有提示，需要你啟動mac裡的system extenstions，這是GlobalProtect某些feature需要的。
+3. 過程會像網頁裡的截圖一樣，先去登入，去下載頁安裝。
+4. 重點：
+   1. 用瀏覽器去要vpn的host的網址，會因憑證被擋而不能連，強制同意憑證的安全性就可以連了。
+   2. 安裝時要勾選安裝GlobalProtect System Extensions。
+   3. 跳出一個系統警告時，要選擇去安全性設定裡打開「同意globalprotect」。
+
+[VPN Protocol](https://go-vpn.com/vpn-protocol/)
+
+VPN有以下幾種不同的協定，要弄清楚是用哪一種才能連接：
+
+1. OpenVPN：
+   1. 每間VPN都支援。
+   2. 受歡迎。
+   3. 相對較新。
+   4. 各種加密算法，安全。
+   5. 較快。
+   6. 設定較麻煩，要產生憑證。
+2. Onion Over VPN：
+   1. 絕對安全。
+   2. 匿名，隱藏真實IP。
+   3. 有提供的業者：NordVPN。
+3. IKEv2：
+   1. 最快。
+   2. MS和Cisco共同開發。
+4. PPTP：
+   1. 點對點隧道協議(Point to Point Tunneling Protocol)。
+   2. 快但不安全，不要用。
+   3. 一組帳密就可以用了。
+5. L2TP / IPSec：
+   1. L2TP (Layer Two Tunneling Protocol, Level 2隧道協議)
+   2. IPSec (Internet Protocol Security，網際網路安全協定)
+   3. MS和Cisco共同開發。
+   4. 比PPTP慢，不安全。
+   5. L2TP要搭配IPSec比較有保障。
+   6. 不要用。
+   7. 設定要多一道共用的金鑰。
+6. TLS/SSL：
+   1. TLS/SSL (Transport Layer Security/Secure Sockets Layer)
+   2. 所有瀏覽器都支援。
+
+[設定VPN的方法](https://iqmore.tw/set-up-vpn-server-on-router)：
+
+globalprotect：
+1. 
+2. 會發現不能

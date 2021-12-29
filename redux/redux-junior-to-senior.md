@@ -147,3 +147,7 @@
    3. 純粹記錄app狀態，沒有要給誰用，當作console.log來用。
 10. 檢查`reducer.js`的initial state只能有負責的state，不能有別的reducer的state在裡面。
 11. 檢查action creator所dispatch或是return的actions的payload，裡面的state不能相同的key value pair丟給不同的reducers。
+
+## hooks
+
+用`useSelector()`取代`mapStateToProps`，不同的地方是mapStateToProps是shallow comparison來決定要不要rerender，但是`useSelector()`每次都會re-render。
