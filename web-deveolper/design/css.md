@@ -23,12 +23,17 @@ almanac有詳列property
     <tr>
         <td>h1, h2</td>
         <td>h1 /h1 <br>h2 /h2</td>
-        <td>代表h1和h2都選擇了</td>
+        <td>或：代表h1和h2都選擇了</td>
     </tr>
     <tr>
         <td>.xxx(.class)</td>
         <td>class = xxx</td>
         <td>很常用，很好用，可以重覆使用，是這個class都會被選</td>
+    </tr>
+    <tr>
+        <td>ul.xxx(.class)</td>
+        <td>class = xxx</td>
+        <td>代表的是ul有xxx class的會被選</td>
     </tr>
     <tr>
         <td>#xxx(#id)</td>
@@ -48,12 +53,12 @@ almanac有詳列property
     <tr>
         <td> p > h2 </td>
         <td>p h2 /h2 /p</td>
-        <td>h2的父繼承自p時才會被選到，如果h2被div包到，這時候h2父繼承自div，則不會被選到。只有兒子會被選到的意思。</td>
+        <td>只有兒子會被選到：h2的父繼承自p時才會被選到，如果h2被div包到，這時候h2父繼承自div，則不會被選到。</td>
     </tr>
     <tr>
         <td> p + h2 </td>
         <td>p h2 /h2 /p</td>
-        <td>h2剛好接在p後面時才會被選到，如果中間隔有其它tag，則不會被選到。例如中間也有一個div，一樣不會被選到。只有弟弟會被選到的意思。</td>
+        <td>只有弟弟會被選到：h2剛好接在p後面時才會被選到，如果中間隔有其它tag，則不會被選到。例如中間也有一個div，一樣不會被選到。</td>
     </tr>
     <tr>
         <td> .xxx:last-child </td>
@@ -158,6 +163,52 @@ almanac有詳列property
        2. max-with：還沒碰到div邊緣，也不會再更大。
     4. 要緊密綁在一起的東西，可以用table把東西都綁在一起。
     5. 字型：在`@font-face`裡面，`font-display:swap`代表先載入瀏覽器字型，之後再切換要用的字型。
+17. 動畫：
+    1. transition
+       1. 秒數
+       2. ease-in-out
+    2. transform
+       1. translateX
+       2. translateY
+       3. rotate
+    3. [animation](https://github.com/yellowful/celerec/blob/master/src/containers/App/App.css)
+       1. 取名
+       2. 時間、linear、infinite
+       3. `@keyframes 名字{....}`
+       4. animation-delay
+       5. animation-play-state
+18. media query：
+    1. 中螢幕：`@media screen and (min-width: 30em) and (max-width: 60em)`
+    2. 大螢幕：`@media screen and (min-width: 60em)`
+    3. [可應用在改善performance](https://github.com/yellowful/developer-notes/blob/main/junior-to-senior/performance.md#part-1)
+
+## grid
+
+1. 先割出grid，再分割出各個區域，割出grid的方法：
+   1. `grid-template-columns`
+      1. 直的、行
+      2. 也就是要幾個column？有多種不同的定義方式
+         1. 最佳：`grid-template-columns: repeat(auto-fill,minmax(300px,1fr));`
+         2. `1fr`：一個column
+         3. `grid-template-columns: 1fr 25%;`：2個column
+   2. `grid-template-rows`
+2. 第一種分割方法：
+   1. `grid-template-areas:`
+   2. 將版面分成幾大塊，加以取名
+   3. 呼叫名字的方式：`grid-area: main;`
+3. 第二種分割方式：
+   1. 用grid的第幾條線來定義
+   2. `grid-column-start: 1;`
+   3. `grid-column-end: 2;`
+   4. `grid-row-start: 1;`
+   5. `grid-row-end:3;`
+4. 第三種分割方式：
+   1. 不管grid第幾條線的定義方式
+   2. `grid-row:span 2;`裡span代表要跨幾格，這裡就是指跨2列。
+5. 其它屬性：`grid-gap`
+6. 心得：
+   1. RWD的card，columns的部份就用`grid-template-columns: repeat(auto-fill,minmax(300px,1fr));`就好了。
+   2. 版面的配置就要手動控制去設定大小。
 
 ## Less, Sass, Scss 預處理器
 
@@ -221,7 +272,7 @@ almanac有詳列property
          ```
 
    5. 邏輯：`@if`和`@else`
-   6. 替代parent的符號：`&`
+   6. 替代parent的符號：`&`，通常搭配`:`來用，例如要用hover之類的。
    7. 內建function：
       1. 顏色變淡：`lighten(顏色,10%)`
       2. 顏色變深：`darken(顏色,10%)`

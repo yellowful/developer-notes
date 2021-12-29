@@ -31,7 +31,9 @@
    4. 用法：
       1. 對element來說，是把styled-components匯入成styled，然後用`styled.div`後面加上template string，內容是css，然後宣告成一個component。
       2. 對component來說，是用`styled(ComponentName)`後面接template string，然後宣告成一個component。
-      3. 內建`{css}`可以把重複的css style的string指定到一個變數，通常取名`XxxStyles`，重複放進其它styled component裡，如此以達到dry，而且可以改一個地方就改了所有重複的地方。
+      3. 內建`{css}`
+         1. 可以把重複的css style的string指定到一個變數，通常取名`XxxStyles`，重複放進其它styled component裡，如此以達到dry，而且可以改一個地方就改了所有重複的地方。
+         2. 用法css加上template string後，指定給變數`xxXxxStyle`。
       4. 可以放到`component-name.styles.jsx`裡，然後export。
       5. 在jsx裡，想要用我們做好的styled component，但是想改成別的element或是component的話，只要把這個element或是component的名稱當成`as`的props傳進去，就好了，如此又多一種重用css的方式了。
       6. props：第172堂
