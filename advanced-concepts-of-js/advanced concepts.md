@@ -35,46 +35,46 @@ closure之所以重要，是因為他會再我們不想要closure的時候出現
 因此我們可以從兩個方面來理解closure：
 
 1. 不想要closure的特性的時候，closure卻會以什麼方式出現，要怎麼解決closure的問題：
-   有一個es6以前很常使用closure的地方可以是for迴圈，如果setTimeout或是任何eventListener裡面的其中一個argument，因為需要放function的定義，這時候就會出現closure，裡面的i會參照外面環境的for的i，所以當event發生的時候，i都結束了。
-      第一種解決方式是：
-         另外定義一個closure的function。
-         讓eventListener去「執行」這個function，因為是執行中不是定義中，所以這時候這個function不是closure的狀態，i就會把"value"傳給這個function。
-         然後function裡面return的function就可以參照外面環境這個傳過來的值當作初始值的變數。
-         而且因為這個function是一個closure，所以每一圈呼叫一次的closure的環境參照值都被隔離，不受影響。
-         [程式碼參考來源](https://eyesofkids.gitbooks.io/javascript-start-from-es6/content/part4/closure.html#%E9%96%89%E5%8C%85%E7%9A%84%E8%A8%98%E6%86%B6%E7%92%B0%E5%A2%83)
+   - 有一個es6以前很常使用closure的地方可以是for迴圈，如果setTimeout，或是任何eventListener裡面的其中一個argument，因為需要放function的定義(就是還沒執行的callback)，這時候就會出現closure，裡面的i會參照外面環境的for的i，所以當event發生的時候，i都結束了。
+      1. 第一種解決方式是：
+         - 另外定義一個closure的function。
+         - 讓eventListener去「執行」這個function，因為是執行中不是定義中，所以這時候這個function不是closure的狀態，i就會把"value"傳給這個function。
+         - 然後function裡面return的function就可以參照外面環境這個傳過來的值當作初始值的變數。
+         - 而且因為這個function是一個closure，所以每一圈呼叫一次的closure的環境參照值都被隔離，不受影響。
+         - [程式碼參考來源](https://eyesofkids.gitbooks.io/javascript-start-from-es6/content/part4/closure.html#%E9%96%89%E5%8C%85%E7%9A%84%E8%A8%98%E6%86%B6%E7%92%B0%E5%A2%83)
 
-         ```js
-         function print(i){
-         return function(){
-            console.log('counter is ' + i)
-         }
-         }
+            ```js
+            function print(i){
+              return function(){
+                 console.log('counter is ' + i)
+              }
+            }
 
-         function counter() {
-         let i = 0
-         for (i = 0; i< 5; i++) {
-               setTimeout(print(i), 1000)
-         }
-         }
+            function counter() {
+            let i = 0
+              for (i = 0; i< 5; i++) {
+                    setTimeout(print(i), 1000)
+              }
+            }
 
-         counter()
-         ```
+            counter()
+            ```
 
-      第二種解決方式是：
-         另外定義一個closure的function包住eventListener
-         因為i從0到4產生了5個隔絕的closure，這5個closure的x都不同，分別是0~4，所以當setTimeout執行的時候，這裡面的x就會是0~4了。
+      2. 第二種解決方式是：
+         - 另外定義一個closure的function包住eventListener
+         - 因為i從0到4產生了5個隔絕的closure，這5個closure的x都不同，分別是0 - 4，所以當setTimeout執行的時候，這裡面的x就會是0 - 4了。
 
-         ```js
-         function counter(x) {
-            setTimeout(function() {
-                  console.log('counter is ' + x)
-            }, 1000)
-         }
+            ```js
+            function counter(x) {
+               setTimeout(function() {
+                     console.log('counter is ' + x)
+               }, 1000)
+            }
 
-         for(let i=0; i < 5 ; i++){
-            counter(i)
-         }
-         ```
+            for(let i=0; i < 5 ; i++){
+               counter(i)
+            }
+            ```
 
 2. 我們想利用closure的特性，怎麼利用，可以得到什麼好處？
    1. 布魯斯解釋的非常好：
