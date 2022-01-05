@@ -285,8 +285,7 @@
    3. 現在的component dev tool還能告訴你為什麼component被render，[新的feature](https://reactjs.org/blog/2019/08/15/new-react-devtools.html)。
    4. [profiler component](https://reactjs.org/docs/profiler.html#usage)：可以包住要測量的component，console.log()出結果。
 5. 有一種情況，即使用了React.memo()，這個functional component的props不是利用相同的state當成props傳進去，而是直接放一個object當成props傳進去，也就是放所謂的inline object或是inline array的時候，因為每次被render時的object的reference都是新的，所以他們的小孩還是會被rerender，如果小孩re-render很貴的時候，小心這種inline的方式放object type的東西。
-6. 上面說的情況也是官方文件提到useCallback
-7. 使用的時機：
+6. 實際使用的時機：
    1. 購物車選取商品時，早就被選的商品，沒有再被選時，就不用被rerender了，但是購物車一直被更新，所以購物車裡的商品可以用.memo()包起來，當props沒變時，就不會被rerender，這樣使用者每點一個商品，先前的商品都不會被rerender，所以效能就可以有效的被提升。
    2. 我想到log的item也可以被`.memo()`包起來，因為log的item的props都是相同的，所以只要props沒變，就不會被rerender。
    3. 感覺這種和效能有關的，在使用者點選螢幕就必需有所更新的component，比較有可能需要用到。
