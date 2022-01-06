@@ -141,6 +141,12 @@ solution: amazon
    var sing = function (){
        console.log('lalala')
    }
+   // 不會出錯：yell是function，所以被hoisted了
+   console.log(yell());
+   // function expression
+   function yell (){
+       console.log('lalala')
+   }
    ```
 
 5. 上面的例子中，sing的var本身是有被hoisted的，例如：
@@ -184,11 +190,12 @@ solution: amazon
 9. 結論：
    1. hoist之所以重要，是因為了解hoist才了解js執行的順序，並不是單純一行一行的執行下來，才能夠了解一行一行解讀時會覺得js無法預期。
    2. 心得整理：
-      1. 了解有creation phase會有hoist現象，execution phase才給值。
-      2. function expression不是function declaration，function expression前面是var，會被hoist。
-      3. 為什麼有function expression這個東西？因為這是js first class function的特色，js的function可以被當成值指定給變數。
-      4. const和let有兩大重點：
+      1. 看JS的程式時，特別是有var和function時，一定要分成兩個phase來看。
+      2. 了解有creation phase會有hoist先給undefined的現象，execution phase才給真正的值。
+      3. function expression不是function declaration，function expression前面是var，前面的var會被hoist，後面的function不會被hoist。
+      4. 為什麼有function expression這個東西？因為這是js first class function的特色，js的function可以被當成值指定給變數。
+      5. const和let有兩大重點：
          1. 沒有hoist的現象，所以es6之後才被制定出來，讓其它語言跳來js的人，能夠不用懂hoist也可以預測js的結果。
          2. 作用域是block，不容易污染到block以外的變數，也和其它語言較接近可預測。
          3. 相較之下var的作用域是function，可能污染到block以外的變數，佔用資源也會比較久。
-      5. function的hoist是好的，var的hoist是不好的，function的hoist可以讓呼叫function之前就把它傳來傳去。var的hoist是不好的，如果var在宣告前就把它傳來傳去，程式碼不好讀，容易出現bug。
+      6. function的hoist是好的，var的hoist是不好的，function的hoist可以讓呼叫function之前就把它傳來傳去。var的hoist是不好的，如果var在宣告前就把它傳來傳去，程式碼不好讀，容易出現bug。

@@ -171,13 +171,14 @@
     5. new：宣告物件時的保留字。
     6. instantiation：宣告新物件時，就會產生新instant。
     7. this：<https://blog.techbridge.cc/2019/02/23/javascript-this/>
-        1. 觀念非常重要，指的是所在scope的父類別的物件，注意是物件，不是類別。例如，JavaScript內建的一些函數，前面可以加上this，這個this指的是windows物件。
+        1. 觀念非常重要，指的是所在scope的父類別的物件，注意是物件，不是類別。例如，JavaScript內建的一些函數，前面可以加上this(`this.fetch`,`this.console.log`)，這個this指的是windows物件。
         2. 「所在scope的父類別物件」指的是，this寫在某個class中，用這個class可以instanciate出一個object，這個object可以用一些method，這些method是在class裡面定義的，所以this.method()的this指的是這個class實體化的object，這個method所在的scope的爸爸class的object。
         3. class在instanciate的時候，就是會先把constructor裡一屬性變成一個object，this指的就是這個object。
         4. React中，class component如果要把爸爸component的state或function傳進來，就要用props從super傳進來，在這個class裡要用的時候，就要加上this，例如this.props，這個this指的是這個class實體化的component object，而不是爸爸component。
         5. 有一種情況，爸爸class中有this，extends的小孩class中也有this，而且小孩引用了爸爸的某些attribute或method有this。
             1. 當用小孩的class去實體化一個object的時候，小孩class和小孩class裡引用到爸爸的this，全都是指這個小孩object。這一點是很容易弄錯的，要小心。
             2. 當用爸爸的class去實體化一個object的時候，爸爸class裡的this指的當然就是這個爸爸object。
+            3. 好記得方式是`aaa.bbb.ccc.ddd.method()`的this是指小數點前面的object，也就是`ddd`。
         6. react無法把資料上傳到爸爸component，但是看起來很像把event上傳給爸爸，其實是從爸爸component下傳一個function作為property，這個function會在小孩component裡面成為property的一個attribute。讓這個function放在DOM的一個call back property裡面，當作call back function，所以在爸爸那邊，這個function就可以listen 小孩call back function的events了，爸爸這邊也可以根據聽到的event更新state。
         7. 如果code呼叫太多this，可以用destructuring，讓程式碼比較clean。
         8. [四種情況下的this](https://reactkungfu.com/2015/07/why-and-how-to-bind-methods-in-your-react-component-classes/)：
@@ -212,8 +213,13 @@
                   ```
 
            3. constructor invocation：
-              1. function有兩種用法，其中一種是被`new` operator使用的用法，這種function稱為function constructor，用來建立物件，它是有[歷史淵源](https://pjchender.blogspot.com/2016/06/javascriptfunction-constructornew.html)的。
-              2. 這種用法下的function不能放return，new的時候，一開始會產生一個空的object，後來constructor裡面的attibute才會被指定值，這個function會自動`return this`，也就是等號左邊會被reference到一個object上，而這種object就叫作instance。
+              1. function有兩種用法，其中一種是被`new` operator使用的用法，這種function稱為function constructor，用來建立物件，它是有[歷史淵源](https://pjchender.blogspot.com/2016/06/javascriptfunction-constructornew.html)的。主要是js沒有class，而當時為了模仿當時java的class很炫的用法。
+              2. 這種用法下的function
+                 1. 不能放return
+                 2. new的時候，一開始會產生一個空的object
+                 3. 然後function**會被執行**(invoke)
+                 4. invoke後，constructor裡面的attibute才會被指定值，method也被執行
+                 5. 最後這個function會自動`return this`，也就是等號左邊會被reference到一個object上，而這種object就叫作instance。
 
                  ```js
                  function dog(name){
@@ -238,7 +244,7 @@
                  2. 不同的地方在於：
                     1. react的class裡的傳統function的this並沒有autobinding，在instanciate之後，this變成window。
                     2. 而js的傳統function的this仍然有autobinding，在instanciate之後，this就變成這個instance。
-           4. apply invocation：
+           4. apply invocation：用`.call()`、`.bind()`、`.apply()`來操控this。
     8. scope：指的是所在位置的function或class裡，指的是variable做用的範圍。和context很容易被搞混，context指的是this指的是誰，只和this有關。
     9. 請參考演算法筆記「class」。
 19. Object：
