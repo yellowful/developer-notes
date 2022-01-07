@@ -66,7 +66,7 @@
             end
         ```
 
-   3. oh my zsh
+   3. [oh my zsh](https://medium.com/statementdog-engineering/prettify-your-zsh-command-line-prompt-3ca2acc967f?fbclid=IwAR3fCQF5sMuepNHLdvm2tLb0Th636NiFS7-MtAd7QszclNj4UBd4UeheD0c)
    4. tree：
       1. 用途，顯示檔案資料結構，以方便寫markdown。
       2. 安裝：brew install tree

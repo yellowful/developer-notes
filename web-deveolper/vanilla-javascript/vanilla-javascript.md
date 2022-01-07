@@ -371,14 +371,21 @@
     7. try{} catch{}，try裡面如果不能跑，就執行cath裡面的東西，例如：發出錯誤訊息。catch可以有參數catch(error){}，用來傳遞系統的錯誤訊息。
 24. synchronous和asynchronous有什麼不同？JavaScript怎麼運作？
     1. synchronous：browser會從最外層開始讀，然後往上疊，接著讀到最裡層，會疊在最上面，這就是在call stack。接著從call stack最上面開始一行一行執行，執行完成就從記憶體裡刪除，也就是first in, last out。如果在call stack中越來越多，超過分配的記憶體，就會stack overflow。
-    2. asynchronous：通常是multi-thread的程式設計，需要管各個thread的進程，較不容易理解。
-    3. JavaScript：是synchronous的語言，非常容易理解，但是執行環境卻提供一些asynchronous的功能：
-        1. Web APIs：有DOM (addEventListener)、AJAX、Timeout...等等。
-        2. Callback Queue：用來放Web API丟回來的function
-        3. Event Loop：會不斷檢查 call stack 結束了沒，結束了才會把 callback queue 裡的東西再丟回 call stack中
-        4. 以setTimeout為例：web browser執行到setTimeout這行時，會丟給Web APIs，Web APIs會等時間到，再把要做的事丟給Callback Queue，Callback Que會等call stack跑完再把事情丟進call stack中。
-        5. callback queue負責 async 是 FIFO，call stack 負責 sync，是 LIFO。
-        6. 參考演算法第114課。
+    2. asynchronous：
+       1. 通常是multi-thread的程式設計，需要管各個thread的進程，較不容易理解，非常難寫。
+       2. 例如我要同時監聽使用者是不是有按下button，同時監聽向別台server要的資料回來了沒，我要寫程式開兩個thread，兩個分別的loop不斷的監聽目標事件發生了沒，而且要寫發生後該怎麼做，做的順序怎麼按排，誰先發生誰先做嗎？
+    3. JavaScript：是synchronous的語言，非常容易理解與好寫，但是執行環境卻提供一些asynchronous的功能：
+        1. Web APIs：有DOM (addEventListener)、AJAX、Timeout...等等，JS 是single thread，async的部份就是靠Web API來達到到。
+        2. JS sync的部份就是靠call stack來達到，外面的function在底下(firs in last out)，裡面的function在上面，最上面的會先執行，執行完就清掉。
+        3. Callback Queue：用來放Web API丟回來的function
+        4. Event Loop：會不斷檢查 call stack 結束了沒，結束了才會把 callback queue 裡的東西再丟回 call stack中
+        5. 以setTimeout為例：web browser執行到setTimeout這行時，會丟給Web APIs，Web APIs會等時間到，再把要做的事丟給Callback Queue，event loop會等call stack跑完再把事情從Callback Que丟進call stack中。
+        6. 我認為關鍵在於js是single thread很好寫，但是想靠著web browser能處理multithread的事情，就需要靠著瀏覽器提供的event loop來處理，Web的api是async的，需要FIFO，所以使用callback queue，JS是sync的，需要LIFO，所以使用call stack，然後利用event loop來監控這些事件，並移動它們，所以JS才能先把async的事情丟出，sync的做事情之後，又很正常的再接住剛剛丟出去，但是已經做完的事情。
+        7. 參考演算法第114課。
+        8. 參考[到底 Event Loop 關我啥事？](https://medium.com/infinitegamer/why-event-loop-exist-e8ac9d287044)
+           1. event loop沒列在es規格書中。
+           2. event loop監控call stack，檢查call stack是否清空了，已經清空了之後，才會把callback queue裡的東西丟回call stack中。
+           3. [event loop視覺化模擬程式](http://latentflip.com/loupe/)
 25. ES2020
     1. bigInt：例如1n, 3242n
     2. optional chaining operator：.?代表用多個object時，某個裡面的attribute，如果沒有這個attribute，就丟undefined，而不會出錯不能跑。
@@ -390,24 +397,26 @@
 
 ## 其它
 
-1. [event propagation](https://www.30secondsofcode.org/articles/s/javascript-event-bubbling-capturing-delegation)：
-   1. 有三個phase
-      1. capture phase：祖先朝子孫，要用時，在addEventListener的第三個參數設成true
-      2. target phase：子孫
-      3. bubble phase：子孫朝祖先
-   2. delegation
-      1. 作法：
-         1. 利用event propagation的特性，只需要在祖先的地方加上event listener，就可以聽到子孫的event。
-         2. 用這個祖先的event handler來處理判斷，要對哪個子孫做反應。
-      2. 優點：
-         1. 只需要下一個listener，就可以監聽到大量的子孫，不用對每一個子孫下event listener，減少記憶思的消耗。
-         2. 可以對動態的elements進行監聽，而且不需要對這個elements進去listener的註冊或是解除註冊。
-      3. [由一個實例得到以下幾個原則](https://hsien-w-wei.medium.com/dom-event-propagation-ii-%E4%BA%8B%E4%BB%B6%E5%8F%AF%E4%BB%A5%E5%A7%94%E8%A8%97-event-delegation-ecccb019a48e)：
-         1. 不是arrow function的情況下，event handler function的this指的是註冊這個event listener的element，註冊在祖先就是祖先，註冊在子孫就是子孫。
-         2. 如果event發生在子孫
-            1. 祖先的event.target指的是子孫。
-            2. 祖先的event handler會比子孫的event handler晚執行，因為bubble phase發生在target phase之後。
-            3. 如果capture phase設成true，那麼祖先的event handler會比子孫的event hanler早執行，因為capture phase發生在target phase之前。
+### [event propagation](https://www.30secondsofcode.org/articles/s/javascript-event-bubbling-capturing-delegation)
+
+1. 有三個phase
+   1. capture phase：祖先朝子孫，要用時，在addEventListener的第三個參數設成true
+   2. target phase：子孫
+   3. bubble phase：子孫朝祖先
+2. delegation
+   1. 作法：
+      1. 利用event propagation的特性，只需要在祖先的地方加上event listener，就可以聽到子孫的event。
+      2. 用這個祖先的event handler來處理判斷，要對哪個子孫做反應。
+   2. 優點：
+      1. 只需要下一個listener，就可以監聽到大量的子孫，不用對每一個子孫下event listener，減少記憶思的消耗。
+      2. 可以對動態的elements進行監聽，而且不需要對這個elements進去listener的註冊或是解除註冊。
+   3. [由一個實例得到以下幾個原則](https://hsien-w-wei.medium.com/dom-event-propagation-ii-%E4%BA%8B%E4%BB%B6%E5%8F%AF%E4%BB%A5%E5%A7%94%E8%A8%97-event-delegation-ecccb019a48e)：
+      1. 不是arrow function的情況下，event handler function的this指的是註冊這個event listener的element，註冊在祖先就是祖先，註冊在子孫就是子孫。
+      2. 如果event發生在子孫
+         1. 祖先的event.target指的是子孫。
+         2. 祖先的event handler會比子孫的event handler晚執行，因為bubble phase發生在target phase之後。
+         3. 如果capture phase設成true，那麼祖先的event handler會比子孫的event hanler早執行，因為capture phase發生在target phase之前。
+   4. delegation實例參考React的[synthetic event](https://github.com/yellowful/developer-notes/blob/main/web-deveolper/react/%E5%AE%98%E6%96%B9%E6%96%87%E4%BB%B6.md#syntheticevent)
 
 ## ES新語法
 
