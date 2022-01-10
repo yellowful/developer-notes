@@ -30,6 +30,7 @@ Lecture 346: React Hooks 8
 
 
 
+
 [進階觀念](https://kentcdodds.com/blog/write-fewer-longer-tests)
    To learn the more advanced React hooks and different patterns to enable great developer APIs for custom hooks.
    Use useReducer to manage state and avoid stale state bugs (and learn when it's preferable over useState)
