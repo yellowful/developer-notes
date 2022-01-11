@@ -28,8 +28,30 @@ Lecture 345: React Hooks 7
 Lecture 346: React Hooks 8
    證明了第二個parameter變動的時候，第一個parameter的function會run
 
+## react和hooks / class component和stateful function component 的不同
 
-
+1. 語法：
+   1. react：
+      1. 優點：class語法機乎就是javascript的class語法，可以同時練到javascript，而且這種用法在其它語言也用得到，但是有以下缺點。
+      2. 比較麻煩，要注意綁定this。
+      3. 將抽象的state邏輯抽出成component增加可重用性，可能產生wrapper hell，一層包一層，很多抽象層，不易找出bug。
+   2. hooks：
+      1. 缺點：hooks獨有的語法，其它地方用不到，但有以下優點。
+      2. 語法比較簡潔，不用注意this的問題。
+      3. 用custom hooks抽出抽象的state邏輯，讓其它component可以重用，但仍很容易看出component的結構。
+2. setState：
+   1. react：
+      1. 部份state更新方便，是auto merge的方式，例如更新count2的state用`this.setState({ count2: this.state.count2 + 1 });`，count1的state就不會被動到。
+      2. 即使要設定的值相同，只要this.setState被呼叫，就會觸發render，例如：state原本`{this.state.count1:0}`，執行`this.setState({count1:0})`，仍然會觸發render，對效能不利影響。
+   2. hooks：
+      1. 沒有auto merge的功能，是用replace的方式更新state，假設原本state是`{count1:0,count2:0}`，如果用`setState({ count2: count2 + 1 });`會造成count1消失，所以要用`setState({ ...state,count2: count2 + 1 });`。
+      2. setState裡面的值如果和現有的state相同，就不會觸發render，會不會render是比較這次render時的state和上次render時的state是否相同。但要注意，如果state如果是referenctial type，仍會觸發render，因為reference會不同。
+3. 效能：
+   1. 誰優誰劣很難說，react主要是class的原理，hooks主要是closure的原理。
+   2. react的缺點：在轉譯成es5的時候，class instance比closure佔較大的記憶體，而且需要在constructor綁定event handler，所以這部份效能會較差。
+   3. hooks的缺點：每次hooks render時，裡面的function都會被重新instanciate，會佔新的記憶體allocation，所以效能較差。
+   4. 官網說現代的瀏覽器下，除非在極端情況下，closure和class的效能差異不大。
+   5. 知乎上有人實測，大部份情形下似乎都看不出效能差異。
 
 [進階觀念](https://kentcdodds.com/blog/write-fewer-longer-tests)
    To learn the more advanced React hooks and different patterns to enable great developer APIs for custom hooks.
