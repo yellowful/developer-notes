@@ -78,7 +78,7 @@ closure之所以重要，是因為他會再我們不想要closure的時候出現
 
 2. 我們想利用closure的特性，怎麼利用，可以得到什麼好處？
    1. 布魯斯解釋的非常好：
-        a function return b function，其中b function可以access a function裡面的變數，這個變數是會記得state的。
+        a function return b function，其中b function可以access a function裡面的變數，這個a function裡的變數是會記得state的。
         呼叫a function的時候可以使用b function和a function裡面的state。
         但是最重要的功能是，把任兩個const指定為a function的時候，這兩個const就是b function，而兩個const用的a function的state是相互隔離的。
         非常好的例子是，一個帳戶的錢就是a function的state，領錢就是被a function return的b function，使用者f就是const f = function a，其實就是return的function b，使用者g就是const g = function g，也是return 的function b，重點是const f戶頭的錢state a和const g戶頭的錢state a是隔離的，而且是各自被記住的。

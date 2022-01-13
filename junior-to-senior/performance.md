@@ -263,7 +263,7 @@
           1. React專用語法。
           2. useState或是useEffect不能放在內部一般function裡面。
           3. useState或是useEffect不能放在code block裡面，意思是不能放在if else或是loops裡面。
-          4. hooks另一個用途是可以用來做重複使用的state，可以跨component使用，例如寫一個React的functional component，然後會回傳Online或是Offline的字串，用來抓取使用者的上線狀態，並且讓各個component裡面可以用到。聽說這個用class component很難做得到？
+          4. hooks就是use開頭的function，它的另一個用途是可以用來做重複使用的state management，可以跨component使用，例如寫一個custom hooks，然後會回傳Online或是Offline的字串，用來抓取使用者的上線狀態，並且讓各個component裡面可以用到，這個react component就很難做得到。
       12. redux
    4. javascript生態常用的工具：
       1. react router：機乎和react和redux搭擋成標配了
