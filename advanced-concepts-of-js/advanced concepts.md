@@ -199,3 +199,15 @@ solution: amazon
          2. 作用域是block，不容易污染到block以外的變數，也和其它語言較接近可預測。
          3. 相較之下var的作用域是function，可能污染到block以外的變數，佔用資源也會比較久。
       6. function的hoist是好的，var的hoist是不好的，function的hoist可以讓呼叫function之前就把它傳來傳去。var的hoist是不好的，如果var在宣告前就把它傳來傳去，程式碼不好讀，容易出現bug。
+
+## generator
+
+1. [PJ的文章](https://pjchender.dev/javascript/js-generator/)
+   1. 用來產生iterator的物件，也就是array alike的物件，方便可以用在for...of上。
+   2. 用法：
+      1. 和function很像，但要加上星號。
+      2. function裡面有yield，yield後面的值，就會是iterator的值。
+      3. 例如`let a = yield 'Hello'`
+      4. 一個一個取值的方式，是叫這個iterator，然後用`.next()`來取值。
+      5. 每一個yield都會暫停這個generator，被呼叫`.next()`的時候，才會執行下一個yield。
+      6. `.next(參數)`裡面的參數，會被丟給yield的左邊，也就是`a`。

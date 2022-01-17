@@ -22,7 +22,8 @@
       1. PRINCE2: projects in controlled environments
       2. PMBoK: project management body of knowledge
       3. Agile
-      4. 或是上面的combination
+      4. waterfall
+      5. 或是上面的combination
 6. business case:
    1. 這是最重要的文件
    2. 包括了很多關鍵的資訊

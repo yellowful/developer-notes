@@ -35,17 +35,21 @@ Lecture 346: React Hooks 8
       1. 優點：class語法機乎就是javascript的class語法，可以同時練到javascript，而且這種用法在其它語言也用得到，但是有以下缺點。
       2. 比較麻煩，要注意綁定this。
       3. 將抽象的state邏輯抽出成component增加可重用性，可能產生wrapper hell，一層包一層，很多抽象層，不易找出bug。
+      4. 同一個生命週期裡可能包了很多不相關的邏輯。
    2. hooks：
       1. 缺點：hooks獨有的語法，其它地方用不到，但有以下優點。
       2. 語法比較簡潔，不用注意this的問題。
-      3. 用custom hooks抽出抽象的state邏輯，讓其它component可以重用，但仍很容易看出component的結構。
+      3. 用custom hooks抽出抽象的state邏輯，在不強迫tree加入更多component的情況下，讓其它component可以重用，可以很容易看出component的結構。
+      4. 不同的邏輯可以用不同的useEffect來處理，較好讀。
 2. setState：
    1. react：
       1. 部份state更新方便，是auto merge的方式，例如更新count2的state用`this.setState({ count2: this.state.count2 + 1 });`，count1的state就不會被動到。
       2. 即使要設定的值相同，只要this.setState被呼叫，就會觸發render，例如：state原本`{this.state.count1:0}`，執行`this.setState({count1:0})`，仍然會觸發render，對效能不利影響。
+      3. `setState()`不能直接當成props往下傳，需包在eventHandler往下傳。
    2. hooks：
       1. 沒有auto merge的功能，是用replace的方式更新state，假設原本state是`{count1:0,count2:0}`，如果用`setState({ count2: count2 + 1 });`會造成count1消失，所以要用`setState({ ...state,count2: count2 + 1 });`。
       2. setState裡面的值如果和現有的state相同，就不會觸發render，會不會render是比較這次render時的state和上次render時的state是否相同。但要注意，如果state如果是referenctial type，仍會觸發render，因為reference會不同。
+      3. `setState()`可以直接當成props往下傳，不需要包在eventHandler往下傳。
 3. 效能：
    1. 誰優誰劣很難說，react主要是class的原理，hooks主要是closure的原理。
    2. react的缺點：在轉譯成es5的時候，class instance比closure佔較大的記憶體，而且需要在constructor綁定event handler，所以這部份效能會較差。
@@ -60,7 +64,6 @@ Lecture 346: React Hooks 8
    Interact with third party DOM libraries with useLayoutEffect
    Learn when to use (and when not to use) useImperativeHandle and useDebugValue
    Create custom hooks for complex use cases
-
 
 ## useEffect
 
@@ -83,3 +86,22 @@ Lecture 346: React Hooks 8
 3. useContext：
    1. composition仍需要傳遞，所以適合傳給某個需要props的特定的子孫。
    2. useContext則可以用在一大堆component都會需要props的情況(locale、暗黑佈景)。
+
+## custom hooks
+
+1. [連結](https://zh-hant.reactjs.org/docs/hooks-custom.html)
+2. 用法：
+   1. 把共用的state邏輯抽出變成一個外部function，寫法和一般function相同。
+   2. 這個custom hooks裡面會用到其它hooks，所用到其它的hooks依然需要遵守要放在最上層，不能放在判斷式裡。
+   3. custom hooks被不同的component呼叫時，他們的state是相互獨立的，原理是即使在同一個component裡呼叫多次useState，每一個state之前也都是獨立的。
+   4. 需要用use做為function的開頭，Hooks才會依照規則檢查是不是符合hook規則，正確的管理state。
+3. [提示：在 Hook 之間傳遞資訊](https://zh-hant.reactjs.org/docs/hooks-custom.html#tip-pass-information-between-hooks)
+   1. 意思是可以把一個state傳入另一個custom hooks裡。
+   2. 例如：
+
+      ```jsx
+      const [recipientID, setRecipientID] = useState(1);
+      const isRecipientOnline = useFriendStatus(recipientID);
+      ```
+
+4. 

@@ -221,23 +221,23 @@
                  4. invoke後，constructor裡面的attibute才會被指定值，method也被執行
                  5. 最後這個function會自動`return this`，也就是等號左邊會被reference到一個object上，而這種object就叫作instance。
 
-                 ```js
-                 function dog(name){
-                    this.dogname=name;
-                    console.log('this.dogname',this.dogname);
-                    console.log('inner this',this);
-                 }
-                 dog('wow'); // 直接呼叫的話，this會是指window，之後this.dogname會被指定成'wow'
-                 console.log('window',dogname);
-                 // 這裡非常容易搞混，這裡meow會變成一個object而不是一個function，{name:undefined}
-                 const meow = new dog();
-                 console.log('meow',meow);// meow dog { dogname: undefined }
+                    ```js
+                    function dog(name){
+                        this.dogname=name;
+                        console.log('this.dogname',this.dogname);
+                        console.log('inner this',this);
+                    }
+                    dog('wow'); // 直接呼叫的話，this會是指window，之後this.dogname會被指定成'wow'
+                    console.log('window',dogname);
+                    // 這裡非常容易搞混，這裡meow會變成一個object而不是一個function，{name:undefined}
+                    const meow = new dog();
+                    console.log('meow',meow);// meow dog { dogname: undefined }
 
-                 // 因為不是直接呼叫function，是用new來操作，這時候的dog('worf')是個constructor
-                 // 一開始的this會指向一個空的object，之後把attribute給值，然後return this。
-                 const mouse = new dog('worf');
-                 console.log('mouse',mouse); // {dogname:'worf'}
-                 ```
+                    // 因為不是直接呼叫function，是用new來操作，這時候的dog('worf')是個constructor
+                    // 一開始的this會指向一個空的object，之後把attribute給值，然後return this。
+                    const mouse = new dog('worf');
+                    console.log('mouse',mouse); // {dogname:'worf'}
+                    ```
 
               3. ES6之後react的class和js的class的比較
                  1. 相同的地方是arrow function會autobinding，也就是你寫的arrow function裡面的this，這個this就會是這個class被instanciate之後的object。
