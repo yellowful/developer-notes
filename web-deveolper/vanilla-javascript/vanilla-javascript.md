@@ -244,7 +244,7 @@
                  2. 不同的地方在於：
                     1. react的class裡的傳統function的this並沒有autobinding，在instanciate之後，this變成window。
                     2. 而js的傳統function的this仍然有autobinding，在instanciate之後，this就變成這個instance。
-           4. apply invocation：用`.call()`、`.bind()`、`.apply()`來操控this。
+           4. apply invocation：用`.call()`、`.bind()`、`.apply()`來操控this，[參考wierd parts](https://github.com/yellowful/developer-notes/blob/main/WierdParts/WeirdParts.md)。
     8. scope：指的是所在位置的function或class裡，指的是variable做用的範圍。和context很容易被搞混，context指的是this指的是誰，只和this有關。
     9. 請參考演算法筆記「class」。
 19. Object：
@@ -386,6 +386,7 @@
            1. event loop沒列在es規格書中。
            2. event loop監控call stack，檢查call stack是否清空了，已經清空了之後，才會把callback queue裡的東西丟回call stack中。
            3. [event loop視覺化模擬程式](http://latentflip.com/loupe/)
+        9. 更細的地方還有分[macro task和micro tast](https://blog.csdn.net/jbj6568839z/article/details/117392166?utm_source=app&app_version=4.21.1&fbclid=IwAR09KW8PW0V3C8uSgW9tKEPqEpyXNtEtrr6hAI8foXCnCJCmrVR4z5YVXHI)
 25. ES2020
     1. bigInt：例如1n, 3242n
     2. optional chaining operator：.?代表用多個object時，某個裡面的attribute，如果沒有這個attribute，就丟undefined，而不會出錯不能跑。

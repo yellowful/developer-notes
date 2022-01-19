@@ -239,7 +239,7 @@
 
 5. 結論：
    1. redux藉由這種方式，集中管理state和promise
-   2. 不需要constructor來設定初值了，也不用在componentdidmount裡先跑function了，通通放在redux裡面去run
+   2. 不需要constructor來設定初值了，也不用在componentDidMount裡先跑function了，通通放在redux裡面去run
 
 ## 實際觀察內部過程(console.log出來)
 

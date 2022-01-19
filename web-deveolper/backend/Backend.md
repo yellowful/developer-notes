@@ -213,5 +213,10 @@ Backend
          2. deploy到heroku後，可以上去看看檔案狀態： `heroku run bash -a quiet-retreat-05063`，其中quiet-retreat-05063是app的名稱
 8. 安全性：
    1. 自己架站時，為了防止DDos攻擊，可以用cloudfare的服務。
-   2. cors能解決瀏覽器的同源政策的問題，而同源政策又是什麼呢？它主要要預防的駭客攻擊是類似xss、cfrs或類似的攻擊，因為不同瀏覽視窗具有相同的cookie，所以駭客網站裡面可以藏銀行轉帳到駭客帳戶的連結，假如你剛好別的視窗開著銀行帳戶的網頁，就可能在駭客的視窗執行到駭客的連結，而對銀行帳戶進行轉帳。因為銀行網站認cookie，確認是你cookie相同沒錯，就會真得執行轉帳。https://blog.techbridge.cc/2017/02/25/csrf-introduction/?fbclid=IwAR0fkuEWoZuo2AidW-alU2eC_yXiE-inIBMSAZvcXgLgtLkhuVmnhja95Ag
-   3. 呼叫後端找資料時，最好用email，不要用id，因為id號碼連續的話，駭客可能用postman去亂猜id，取得自己以外別人的資料。
+   2. [csrf](https://blog.techbridge.cc/2017/02/25/csrf-introduction/?fbclid=IwAR0fkuEWoZuo2AidW-alU2eC_yXiE-inIBMSAZvcXgLgtLkhuVmnhja95Ag)：
+      1. cors能解決瀏覽器的同源政策的問題，而同源政策又是什麼呢？它主要要預防的駭客攻擊是類似xss、csrf或類似的攻擊。
+      2. csrf(Cross Site Request Forgery)是因為**不同瀏覽視窗具有相同的cookie**，所以駭客網站裡面可以藏銀行轉帳到駭客帳戶的連結，假如你剛好**別的視窗開著銀行帳戶的網頁**，就可能在駭客的視窗執行到駭客的連結，而對銀行帳戶進行轉帳。因為銀行網站認cookie，確認是你cookie相同沒錯，就會真得執行轉帳。
+   3. [XSS](https://medium.com/hannah-lin/%E5%BE%9E%E6%94%BB%E6%93%8A%E8%87%AA%E5%B7%B1%E7%B6%B2%E7%AB%99%E5%AD%B8-xss-cross-site-scripting-%E5%8E%9F%E7%90%86%E7%AF%87-fec3d1864e42)：
+      1. 看起來是你的網站被注入了惡意程式碼
+      2. 或是被分享的網址可以讓你的網址被注入惡意程式碼
+   4. 呼叫後端找資料時，最好用email，不要用id，因為id號碼連續的話，駭客可能用postman去亂猜id，取得自己以外別人的資料。

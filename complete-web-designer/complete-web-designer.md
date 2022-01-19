@@ -47,3 +47,42 @@
    1. freelancer：自己是老闆，自己接案
    2. agency：跟設計公司要案子
    3. inhouse：直接跟在公司內部工作
+
+## wireframe
+
+1. 可以先用紙筆畫草圖，之後再用figma畫出來。
+2. 幫助我們了解使用者如何navigate我們的產品，並且了解user flow合不合理。
+3. 重點：
+   1. layout，先不管detail。
+   2. 介於sketch和prototype之間。
+4. 有什麼功用：
+   1. 釐清team之間的認知。
+   2. build => measure => learn => build
+      1. measure可以用在user testing，取得使用者的數據和使用方式，了解使用者的痛處。
+      2. 給客戶和stackholder看，然後取得回饋。
+5. 如何畫wireframe：
+   1. 參考user flows, user story和sitemap
+   2. 著重於最有風險的頁面呈現出來，風險是指不容易預期的，可能是好的可能是壞的，例如：某些我們假設使用者很喜歡的？某些頁面操作過於複雜的地方？操作必需依照順序太困難？
+   3. 相比之下，profile或是wish list就沒那麼重要。
+   4. 全team參與，可以了解什麼可以做得出來，什麼做不出來。很容易設計出來的太複雜，不容易做得出來，或是太花時間。
+6. figma：
+   1. 用課程給的resource，可以快速畫出來，不用注意字型、顏色。
+   2. 有一個plug-in叫content Reel，可以產生假資料或圖片。
+   3. 範例：
+      1. home page：
+         1. 開一個手機的frame，叫做home page。
+         2. 可以做一些功能profile、cards、search、categories、whishlist、cart、checkout、navbar。
+         3. 開啟grid，方便對濟。
+      2. 做product page：
+         1. 可以先開一個frame，並把隔壁的navbar copy過來，可以把一個card內容移過來改。
+         2. 按鈕可以用detach instance把它拆解，加以修改。
+         3. 做一個review、Avatar
+         4. 做一個see more reviews
+      3. checkout page:
+         1. 刪用把icon拆解，option+command+滑鼠
+         2. 也許不需要navagation，只要留結帳的按鈕。
+      4. 心得：
+         1. 寬度看起來是手機的寬度，高度看起來沒有限制，可以顯示很長的內容。
+         2. 按鈕看起來都是長的
+         3. 要強調的地方才放顏色，不然都用黑白就好了。
+7. 要有失敗的準備，不可能一次就ok，wireframe就是讓你快速失敗和快速修改的。
