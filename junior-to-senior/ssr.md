@@ -73,4 +73,17 @@
     5. `npm start`的script改成`"next"`
     6. `npm start`之後，會自動產生`.next`的資料夾：bundles都自動放到dist資料夾裡。
     7. pages資料夾的用法和gatsby.js是一樣的。
-    8. 用chrome打開看"view page source"，會看到render完的結果，然而SPA打開看"view page source"，會看到。
+    8. 用chrome打開看"view page source"，會看到render完的結果，body裡面會有一堆html的tag，然而SPA打開看"view page source"，body裡面的html tag只會看到一個div，然後id是root。
+    9. router：
+       1. react-router用在ssr有點麻煩。
+       2. next用Link來route，非常方便，語法和gatsby.js很像，next的Link的attribute不是用`to`而是維持用`href`
+       3. [a tag和Link的差別](https://medium.com/@wilbo/server-side-vs-client-side-routing-71d710e9227f)
+          1. a tag：用到的是server side的render，因為會向後端做request，頁面會全部下載和render，會看到flash。
+          2. Link：是用SPA的方式來route，用JS來render，不需要向後端做request全部的檔案，只會request ajax的部份，只會下載和render必要的部份。
+
+## dynamic apps
+
+1. API：
+   1. 可以在server side就先request：page或component去定義`.getInitialProps`來取得資料，這個`.getInitialProps`會定義成一個function，然後return的值就是要傳進這個component的props。 
+   2. 可以在client side才做request
+   
