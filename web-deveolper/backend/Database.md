@@ -1,4 +1,5 @@
-#Database
+# Database
+
 1. 為什麼要學資料庫呢？
    1. back-end：要做出使用者能呼叫和搜尋的功能，就得會把前端的搜尋轉成資料庫的搜尋。
    2. data scientist：從資料庫裡搜尋出有用的資料，進行分析。
@@ -48,7 +49,7 @@
             3. GUI可以用PSequel，mac和pc都相容，免費。
          2. redis
 4. 關聯式資料庫的大觀念：
-   1. https://www.khanacademy.org/computing/computer-programming/sql/relational-queries-in-sql/a/splitting-data-into-related-tables
+   1. [資料庫課程影片](https://www.khanacademy.org/computing/computer-programming/sql/relational-queries-in-sql/a/splitting-data-into-related-tables)
    2. 某項column的某row如果在好幾個table中都有的話，以後那個row要更新的話，那個row在所有table裡都要更新。
    3. 上面那點很麻煩，所以最好相同資料不要出現在不同table中，才不會那麼麻煩，server速度也才會快。
    4. 一些很常出現的東西，也把他建一個table，並賦予id，這樣就更快速、有效、不容易出錯。
@@ -62,11 +63,11 @@
    9. 有的後端並沒有進行DELETE，而是設定一個欄位，記錄那個row被DELETE了，SELECT再另外選取，如此較為安全，但是也較為麻煩。
    10. 用DELETE之前，用SELECT進行相同的查詢，才不會殺錯。
    11. transaction：
-       1.  結合幾個動作一起做，如果database無法一起做這幾個動作的話，會退回(rollback)原本狀態，不會只做一個動作沒做另一個動作。
-       2.  tansaction還沒完成時，這些table還不會更新，才不會出現中間query到資料不一致的情況。
+       1. 結合幾個動作一起做，如果database無法一起做這幾個動作的話，會退回(rollback)原本狀態，不會只做一個動作沒做另一個動作。
+       2. tansaction還沒完成時，這些table還不會更新，才不會出現中間query到資料不一致的情況。
    12. 為什麼要分成兩個table呢？
-       1.  因為安全性的問題。
-       2.  web app需要load使用者資料來做應用，所以backend需要database回傳使用者資料，而web app不能load使用者的敏感資料，例如password的hash，所以password要另外存在另一個table，如此才能回傳沒有password的table給web app用。
+       1. 因為安全性的問題。
+       2. web app需要load使用者資料來做應用，所以backend需要database回傳使用者資料，而web app不能load使用者的敏感資料，例如password的hash，所以password要另外存在另一個table，如此才能回傳沒有password的table給web app用。
 5. PostgreSQL：
    1. 安裝：
       1. 先安裝GUI：建議DBeaver(或是PSequel)
@@ -91,7 +92,7 @@
          3. 啟動：`psql`
          4. 建立資料庫：`CREATE DATABASE test;`
    2. 命令、操作：
-      1. 通常命令用大寫，名稱用小寫，比較容易讀，但是小寫一樣可以執行命令。但是名稱或內容大小寫就有區別，所以常都會全部轉小寫才存資料庫中。
+      1. 通常命令用大寫，名稱用小寫，比較容易讀，但是小寫一樣可以執行命令。但是**名稱或內容大小寫就有區別**，所以常都會全部轉小寫才存資料庫中。
       2. 字串要用單引號，雙引號行不通。
       3. 命令可以多行，讀到分號才會執行，所以結尾一定要加分號。
       4. 要會以下常用的操作：
@@ -103,7 +104,7 @@
                 WHERE pg_stat_activity.datname = 'database_name'; 
          2. 建立table (column, row )
             1. CREATE TABLE table_name (column1 dada_type1, column2 data_type2, ...);
-            2. https://www.techonthenet.com/postgresql/datatypes.php
+            2. [重要的data type有這些](https://www.techonthenet.com/postgresql/datatypes.php)：
                1. 不准空白：NOT NULL
                2. 內部唯一序號，可以達到快速檢索：PRIMARY KEY
                3. 可以指定長度的字：VARCHAR(長度)
@@ -113,15 +114,15 @@
          3. 列出tables：\d
          4. 退出database：\q
          5. 取消前面命令，不執行，重新輸入，快速鍵：^c
-         6. 在table插入 column和row：
+         6. 在table插入 column和row：(已存在的3個column裡插入3個值，也就是插入一個row)
             1. INSERT INTO table_name (column1, column2, column3) VALUES (value1, value2, value3);
             2. value如果是字串要用''
             3. VALUES記得要加S
-         7.  找出來某個table或某個row：
-            4. SELECT (colum1, column2) FROM table_name;
-            5. SELECT * FROM table_name;
-         8.  修改table：
-            6. 增減column：
+         7. 找出來某個table或某個row：
+            1. SELECT (colum1, column2) FROM table_name;
+            2. SELECT * FROM table_name;
+         8. 修改table：
+            1. 增減column：
                1. 一次增加兩個column：
                     ALTER TABLE table_name
                     ADD column3 data_type3,
@@ -129,15 +130,15 @@
                2. 砍掉一個column：
                     ALTER TABLE table_name
                     DROP column3;
-            7. 修改column的名稱：
+            2. 修改column的名稱：
                 ALTER TABLE table_name
                 RENAME old_column1
                 TO new_column1
-            8. 修改column屬性：
+            3. 修改column屬性：
                 ALTER TABLE table_name
                 ALTER COLUMN column1
                 TYPE bigint
-            9.  修改值：
+            4. 修改值：
                1. 同時修改兩個column的值：注意只有一個SET，然後WHERE前沒有逗號
                     UPDATE table_name
                     SET column3 = value3,
@@ -148,115 +149,115 @@
                     SET column3 = value3
                     WHERE column1 = value1_1
                     OR column1 = value1_2;
-            10. 刪除列：DELETE FROM是接table_name，WHERE是接條件
-               3. 刪除一整列：1個條件
+            5. 刪除列：DELETE FROM是接table_name，WHERE是接條件
+               1. 刪除一整列：1個條件
                     DELETE FROM table_name
                     WHERE column1 = value1;
-               4. 刪除一整列：2個條件
+               2. 刪除一整列：2個條件
                     DELETE FROM table_name
                     WHERE column1 = value1
                     AND column2 = value 2;
-            11. 刪除一個table：DROP TABLE table_name;
-         9.  搜尋：
-           1.  找出A開頭的人的資料
+            6. 刪除一個table：DROP TABLE table_name;
+         9. 搜尋：
+            1. 找出A開頭的人的資料
                SELECT * FROM table_name
                WHERE column1 LIKE 'A%';
-           2.  找出A結尾的人的資料
+            2. 找出A結尾的人的資料
                SELECT * FROM table_name
                WHERE column1 LIKE '%A'
-           3.  WHERE很多條件的時候：
-               1.  可以加上AND, OR等等。
-               2.  可以用IN取代OR
-               3.  IN裡面的條件可以用其他table 選出來的值當條件。
-           4.  分類：GROUP BY
-           5.  改名：
-               1.  AS：搜尋結果的column改名
-               2.  HAVING：要搭配GROUP，等於依據搜尋結果，GROUP改名後的WHERE
-               3.  CASE：
-                   1.  WHEN 條件 THEN 新值
-                   2.  END AS 新欄位
-                   3.  實例：
-                           CREATE TABLE student_grades (
-                               id INTEGER PRIMARY KEY AUTOINCREMENT,
-                               name TEXT,
-                               number_grade INTEGER,
-                               fraction_completed REAL);
-                               
-                           INSERT INTO student_grades (name, number_grade, fraction_completed)
-                               VALUES ("Winston", 90, 0.805);
-                           INSERT INTO student_grades (name, number_grade, fraction_completed)
-                               VALUES ("Winnefer", 95, 0.901);
-                           INSERT INTO student_grades (name, number_grade, fraction_completed)
-                               VALUES ("Winsteen", 85, 0.906);
-                           INSERT INTO student_grades (name, number_grade, fraction_completed)
-                               VALUES ("Wincifer", 66, 0.7054);
-                           INSERT INTO student_grades (name, number_grade, fraction_completed)
-                               VALUES ("Winster", 76, 0.5013);
-                           INSERT INTO student_grades (name, number_grade, fraction_completed)
-                               VALUES ("Winstonia", 82, 0.9045);
+            3. WHERE很多條件的時候：
+               1. 可以加上AND, OR等等。
+               2. 可以用IN取代OR
+               3. IN裡面的條件可以用其他table 選出來的值當條件。
+         10. 分類：GROUP BY
+         11. 改名：
+             1. AS：搜尋結果的column改名
+             2. HAVING：要搭配GROUP，等於依據搜尋結果，GROUP改名後的WHERE
+             3. CASE：
+                1. WHEN 條件 THEN 新值
+                2. END AS 新欄位
+                3. 實例：
+                        CREATE TABLE student_grades (
+                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            name TEXT,
+                            number_grade INTEGER,
+                            fraction_completed REAL);
 
-                           SELECT name, number_grade, ROUND(fraction_completed * 100) as percent_completed FROM student_grades;
+                        INSERT INTO student_grades (name, number_grade, fraction_completed)
+                            VALUES ("Winston", 90, 0.805);
+                        INSERT INTO student_grades (name, number_grade, fraction_completed)
+                            VALUES ("Winnefer", 95, 0.901);
+                        INSERT INTO student_grades (name, number_grade, fraction_completed)
+                            VALUES ("Winsteen", 85, 0.906);
+                        INSERT INTO student_grades (name, number_grade, fraction_completed)
+                            VALUES ("Wincifer", 66, 0.7054);
+                        INSERT INTO student_grades (name, number_grade, fraction_completed)
+                            VALUES ("Winster", 76, 0.5013);
+                        INSERT INTO student_grades (name, number_grade, fraction_completed)
+                            VALUES ("Winstonia", 82, 0.9045);
 
-                           SELECT COUNT(*),
-                               CASE
-                                   WHEN number_grade > 90 THEN 'A'
-                                   WHEN number_grade > 80 THEN 'B'
-                                   WHEN number_grade > 70 THEN 'C'
-                                   ELSE 'F'
-                               END AS letter_grade
-                           FROM student_grades
-                           GROUP BY letter_grade;
-                       1. 'B'的條件其實包含了<=90
-                       2. 顯示的欄位不只COUNT，還包含letter_grade
-           6.  COUNT：計數
-           7.  比大小：會自動分組，不用手動寫出小於的指令，例如：
-                   SELECT COUNT(*),
-                   CASE
-                      WHEN number_grade > 90 THEN 'A'
-                      WHEN number_grade > 80 THEN 'B'
-                      WHEN number_grade > 70 THEN 'C'
-                      ELSE 'F'
-                   END AS letter_grade
-                   FROM student_grades
-                   GROUP BY letter_grade;
-         10. 依分數的順序列出資料：
+                        SELECT name, number_grade, ROUND(fraction_completed * 100) as percent_completed FROM student_grades;
+
+                        SELECT COUNT(*),
+                            CASE
+                                WHEN number_grade > 90 THEN 'A'
+                                WHEN number_grade > 80 THEN 'B'
+                                WHEN number_grade > 70 THEN 'C'
+                                ELSE 'F'
+                            END AS letter_grade
+                        FROM student_grades
+                        GROUP BY letter_grade;
+                    1. 'B'的條件其實包含了<=90
+                    2. 顯示的欄位不只COUNT，還包含letter_grade
+         12. COUNT：計數
+         13. 比大小：會自動分組，不用手動寫出小於的指令，例如：
+                 SELECT COUNT(*),
+                 CASE
+                    WHEN number_grade > 90 THEN 'A'
+                    WHEN number_grade > 80 THEN 'B'
+                    WHEN number_grade > 70 THEN 'C'
+                    ELSE 'F'
+                 END AS letter_grade
+                 FROM student_grades
+                 GROUP BY letter_grade;
+         14. 依分數的順序列出資料：
                SELECT * FROM table_name
                ORDER BY column1 DESC(或是ASC);
-         11. 運用function：平均AVG、總和SUM、計數COUNT、四捨五入ROUND
-             1.  SELECT AVG(column2) FROM table_name;
-             2.  SELECT SUM(column3) FROM table_name;
-             3.  SELECT COUNT(colum4) FROM table_name;
-         12. 關聯兩個table：
-            12. SELECT * FROM table_name1
-                 JOIN table_name2
-                 ON table_name1.column3 = table_name2.column2;
-            13. 上面程式碼，只有相同名字的才會在新的表裡面
-            14. 這個出現的表，並不是產生了一個新的table，而是顯示成新的table，難怪是用SELECT指令。
-            15. LEFT OUTER JOIN：和JOIN用法一樣，但是讓table_name1有(LETF)而table_name2沒有(RIGHT)的欄位也必須顯示，就是LEFT比RIGHT廣(OUTER)的意思。但是RIGHT OUTER JOIN就很少人用了，習慣問題。
-         13. 權限：
-             1.  GRANT FULL ON TABLE table_name TO super_admin;
-             2.  GRANT SELECT ON TABLE table_name TO analyzing_user;
-             3.  有些公司不願客戶個資被query，那可以做一個匿名版的database。
-         14. transaction：
+         15. 運用function：平均AVG、總和SUM、計數COUNT、四捨五入ROUND
+             1. SELECT AVG(column2) FROM table_name;
+             2. SELECT SUM(column3) FROM table_name;
+             3. SELECT COUNT(colum4) FROM table_name;
+         16. 關聯兩個table：
+             1. SQL：
+                SELECT * FROM table_name1
+                JOIN table_name2
+                ON table_name1.column3 = table_name2.column2;
+             2. 上面程式碼，只有相同名字的才會在新的表裡面
+             3. 這個出現的表，並不是產生了一個新的table，而是顯示成新的table，難怪是用SELECT指令。
+             4. LEFT OUTER JOIN：和JOIN用法一樣，但是讓table_name1有(LETF)而table_name2沒有(RIGHT)的欄位也必須顯示，就是LEFT比RIGHT廣(OUTER)的意思。但是RIGHT OUTER JOIN就很少人用了，習慣問題。
+         17. 權限：
+             1. GRANT FULL ON TABLE table_name TO super_admin;
+             2. GRANT SELECT ON TABLE table_name TO analyzing_user;
+             3. 有些公司不願客戶個資被query，那可以做一個匿名版的database。
+         18. transaction：
                 BEGIN TRANSACTION;
                 一連串命令;
                 COMMIT;
-         15. 可以練習的網站：
-             1.  https://www.khanacademy.org/computing/computer-programming/sql
-             2.  https://www.codecademy.com/learn/learn-sql
-             3.  有一種sqLite，可以直接在web page建立資料庫，但程式碼放在前端，我覺得有一定的危險性：https://www.khanacademy.org/computer-programming/using-sqlite-inside-a-webpage/5618461699080192
-             4.  
+         19. 可以練習的網站：
+             1. <https://www.khanacademy.org/computing/computer-programming/sql>
+             2. <https://www.codecademy.com/learn/learn-sql>
+             3. 有一種sqLite，可以直接在web page建立資料庫，但程式碼放在前端，我覺得有一定的危險性：<https://www.khanacademy.org/computer-programming/using-sqlite-inside-a-webpage/5618461699080192>
 6. 後端用的library
-    1. pg-promise：語法簡單，類似sql語法
-    2. KNEX.JS：
+   1. pg-promise：語法簡單，類似sql語法
+   2. KNEX.JS：
       1. KNEX最好用：http://knexjs.org/#Installation-node
-          1. npm install knex
-          2. npm install pg
+         1. npm install knex
+         2. npm install pg
       2. 設定：
-            1.  require的地方，client要設為pg
-            2.  server送出給postgresql的connection
-                1.  user要設成database的創建者
-                2.  要有password，即使是空字串也沒關係
+         1. require的地方，client要設為pg
+         2. server送出給postgresql的connection
+            1. user要設成database的創建者
+            2. 要有password，即使是空字串也沒關係
       3. 語法：
          1. .slect()
             1. table：.from('table_name')
@@ -306,10 +307,4 @@
             }
          3. 雖然Andrei是用ssl:true，但是ssl:true要收費，Andrei用以下設定，不安全，正式商業化時不要用，而我是用heroku文件的用法，沒用以下用法：
             process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
-   2. command line連上資料庫之後，用sql指令去把相關欄位建立起來。 
-
-
-
-
-
-
+   2. command line連上資料庫之後，用sql指令去把相關欄位建立起來。

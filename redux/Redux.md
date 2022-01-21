@@ -13,7 +13,8 @@
     2. actions：不是真正的邏輯，只是一個名稱和payload(資料狀態)
     3. dispatch：控制真正用來控制要不要發出action給store
     4. stores：決定要訂閱那個dispatch
-    5. view：顯現DOM
+    5. controller views and view：顯現DOM
+    6. flow(循環)：action=>dispatch=>stores=>component(view) (=>action)
 4. redux：
     1. 名詞：
        1. action：要送去store的資料，有type和payload，會記載了發生了什麼event和state是什麼。

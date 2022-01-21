@@ -64,26 +64,54 @@
        2. 不用花server的算力，花使用者的chrome算力。
 13. Next.js
     1. 課程第245課是next.js 5的版本，現在已經是第12版了。
-    2. `npm init -y`
-    3. `npm install next react react-dom`
-    4. 功能：
+    2. `npx create-next-app nextjs-blog`，以下舊方法可以忽略了：
+       1. `npm init -y`
+       2. `npm install next react react-dom`
+    3. 功能：
        1. 已包含webpack
        2. 已包含less, scss
        3. 支援type script
-    5. `npm start`的script改成`"next"`
-    6. `npm start`之後，會自動產生`.next`的資料夾：bundles都自動放到dist資料夾裡。
-    7. pages資料夾的用法和gatsby.js是一樣的。
-    8. 用chrome打開看"view page source"，會看到render完的結果，body裡面會有一堆html的tag，然而SPA打開看"view page source"，body裡面的html tag只會看到一個div，然後id是root。
-    9. router：
+    4. `npm start`的script改成`"next"`
+    5. `npm start`之後，會自動產生`.next`的資料夾：bundles都自動放到dist資料夾裡。
+    6. pages資料夾的用法和gatsby.js是一樣的。
+    7. 用chrome打開看"view page source"，會看到render完的結果，body裡面會有一堆html的tag，然而SPA打開看"view page source"，body裡面的html tag只會看到一個div，然後id是root。
+    8. router：
        1. react-router用在ssr有點麻煩。
-       2. next用Link來route，非常方便，語法和gatsby.js很像，next的Link的attribute不是用`to`而是維持用`href`
+       2. next用Link來route，非常方便，語法和gatsby.js很像，next的Link的attribute不是用`to`而是維持用`href`，但是next的Link一定要包住一個tag，不然直接包字。
        3. [a tag和Link的差別](https://medium.com/@wilbo/server-side-vs-client-side-routing-71d710e9227f)
           1. a tag：用到的是server side的render，因為會向後端做request，頁面會全部下載和render，會看到flash。
           2. Link：是用SPA的方式來route，用JS來render，不需要向後端做request全部的檔案，只會request ajax的部份，只會下載和render必要的部份。
+    9. deploy：`now`的指令就會自動deploy了。
+    10. [google機械人如何耙你的網站](https://developers.google.com/search/docs/advanced/javascript/javascript-seo-basics)：
+        1. [seo影片](https://www.youtube.com/watch?v=nwGY-9lwTF4)：
+           1. rendering是用api的data把templates發佈出來的過程。
+           2. 連到別的網頁一定要用a tag用href連過去，而不要用其它div或span之類的tag或event handler去連，機器人才耙得到。
+           3. 假如是用javascript來處理兩個網頁之間的轉換，用History API像一般的URL來處理，而不要用hash-based(井字號)的routing技術來處理，爬蟲會忽略這種方式。
+           4. `<meta name="robots" content="noindex">`會阻止google爬蟲抓內容。
+14. progressive rendering：
+    1. 運用code splitting的技術。
+    2. 先render一部份，之後再背景或是使用者互動到的功能再去render出來。
+    3. 這過程，使用者一開始就看到畫面了，可能不會注意到背景仍在render東西。
+    4. 去react的官網reload，看networks的tool，紅線是下載完成了，之後仍有東西在背景下載。
+    5. 很多公司用這種技巧：
+       1. Flipkart：速度感覺真得很快。
+       2. Ali Express：速度的確也蠻快的。
+    6. 他們會serving一個shell或是一個skeleton，讓前端好像立即看到畫面一樣，但是事實上前端仍然在背景下載很多東西。
+15. [prerender.io](https://prerender.io/)：他們的server可以儲存你render好網頁，讓爬蟲可以抓。
+16. 重視SEO的amazon、walmart等都用ssr，他們很適合。
+17. 其它有的網站可能會用progressive rendering，來加速顯視的速度。
 
 ## dynamic apps
 
-1. API：
-   1. 可以在server side就先request：page或component去定義`.getInitialProps`來取得資料，這個`.getInitialProps`會定義成一個function，然後return的值就是要傳進這個component的props。 
-   2. 可以在client side才做request
-   
+1. fetch API：
+   1. 可以在server side就先request：[getInitialProps已經不用了](https://nextjs.org/docs/api-reference/data-fetching/get-initial-props)
+      1. page或component去定義`.getInitialProps`來取得資料，這個`.getInitialProps`會定義成一個function，然後return的值就是要傳進這個component的props。 
+      2. 用jsonplaceholder練習render一列名字出來。
+      3. 在`.getInitialProps`裡面`consolog.log`抓回來的資料，我們用Link連來這個page和直接對這個page做reload，會發現有不同的現象。
+         1. 用Link連來這個page或是重逛這個網頁：console.log會發生在瀏覽器。
+         2. 直接對這個page做hard reload：console.log會發生在node環境下。
+         3. 不管以上哪種方式，都可以看到render完成的畫面。
+   2. 可以在client side才做request：如上面提到的，用Link來連這個page。
+2. 練習任務：
+   1. 把robotfriend改成next。
+   2. 把每一個robot都連結到一個robot的page。
