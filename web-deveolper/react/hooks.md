@@ -46,10 +46,12 @@ Lecture 346: React Hooks 8
       1. 部份state更新方便，是auto merge的方式，例如更新count2的state用`this.setState({ count2: this.state.count2 + 1 });`，count1的state就不會被動到。
       2. 即使要設定的值相同，只要this.setState被呼叫，就會觸發render，例如：state原本`{this.state.count1:0}`，執行`this.setState({count1:0})`，仍然會觸發render，對效能不利影響。
       3. `setState()`不能直接當成props往下傳，需包在eventHandler往下傳。
+      4. setState不能用在render裡，不然會造成無限迴圈。
    2. hooks：
       1. 沒有auto merge的功能，是用replace的方式更新state，假設原本state是`{count1:0,count2:0}`，如果用`setState({ count2: count2 + 1 });`會造成count1消失，所以要用`setState({ ...state,count2: count2 + 1 });`。
       2. setState裡面的值如果和現有的state相同，就不會觸發render，會不會render是比較這次render時的state和上次render時的state是否相同。但要注意，如果state如果是referenctial type，仍會觸發render，因為reference會不同。
       3. `setState()`可以直接當成props往下傳，不需要包在eventHandler往下傳。
+      4. `setState()`很容易造成無限迴圈，要用在event handler或是其它hooks裡面，例如useEffect裡。
 3. 效能：
    1. 誰優誰劣很難說，react主要是class的原理，hooks主要是closure的原理。
    2. react的缺點：在轉譯成es5的時候，class instance比closure佔較大的記憶體，而且需要在constructor綁定event handler，所以這部份效能會較差。
