@@ -113,4 +113,39 @@
 
 ## 內部
 
-1. 
+1. 內部流程：js => v8 => node.js APIs => node.js bindings => libuv => OS
+2. node.js APIs：
+   1. fs
+   2. http：處理request和response
+   3. path、環境變數、參數
+   4. crypto：內建對資料做一些加密解密處理，提高安全性
+3. node內部有些是js寫的，有些比較底層的功能是C++和C寫的。
+4. node.js bindings：
+   1. 用來把node.js APIs被呼叫的功能，用來跟C++或是C寫的底層功能串在一起，讓node.js可以跨平台在各個OS上跑。
+   2. 也可以說是c++ binding和c binding的結合。
+5. libuv：
+   1. 主要處理input和output，例如檔案或是網路。
+   2. 比node.js更底層一點，用C寫的。
+   3. 就像是os的delegate。
+   4. node.js bindings會把資料傳給libuv。
+   5. 各種OS處理async的方式完全不同，libuv會根據不同的OS來處理這些不同的async的方式，比較高層的node.js bindings就可以不用擔心這些不同的OS了。
+6. 藉由node.js上面提到的內部流程和功能，我們寫js時就可以寫不只有v8有的功能，來做到很多事情，特別是async的部份會是重點。
+7. 原始碼：
+   1. 貢獻的有：NASA、Netflix等
+   2. 最重要的是：`./src`和`./lib`
+   3. `./lib`：
+      1. 各種內建的功能，例如`fs`、`path`、`crypto`、`http`、`url`、`os`、`process`、`console`等等。
+      2. 就放在裡面的檔案，例如`path.js`、`fs.js`、`crypto.js`、`http.js`、`url.js`、`os.js`、`process.js`、`console.js`等等。
+   4. `./src`：
+      1. 裡面主要是Node.js bindings
+      2. 主要比較低階的C++的code，用來連接javscript世界和C++世界。
+      3. 例如：`fs.open(path[, flags[, mode], callback)`
+         1. 我們可以到`./lib`裡面找到`fs.js`。
+         2. 找到open這個function：`function open(path, flags, mode, callback) {`
+         3. 程式碼的最後一行可以看到`binding.open(pathModule.toNamespacedPath(path), flagsNumber, mode, req);`，而這一行就是在呼叫`./src`裡C++的程式碼。
+         4. 我們可以去`./src`裡去找到`node_file.cc`。
+            1. 副檔名：
+               1. c++的程式碼的副檔名有：`.cc`, `.cpp`等等。
+               2. `.h`：代表header，
+            2. 檔案裡面可以找到initilize的function：`void Initialize(Local<Object> target,Local<Value> unused, Local<Context> context, void* priv) {`
+            3. 
