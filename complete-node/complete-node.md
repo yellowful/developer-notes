@@ -194,7 +194,50 @@
                5. `fd = _open_osfhandle(file, flags);`，把檔案權限傳給`fd`這個變數，讓c語言可以用這個檔案。
                6. 最後`SET_REQ_RESULT(req, fd);`，才把`fd`回傳給node.js的binding。
          4. sync and async
-            1. sync代表的是一行一行的執行
-            2. async代表的是有些在背景執行，就下去執行別行了
-            3. js非常在行這種async的程式撰寫
-         5. 
+            1. sync代表的是一行一行的執行，結果非常容易預測。
+            2. async代表的是有些程式碼丟去背景執行，就下去執行別行程式碼了，結果並不是照順序顯示。
+            3. 比喻：
+               1. sync：先學完html、再學完JS、再學完node.js、最後找到工作
+               2. async：先學完html、學一部份JS、再學一部份node.js、找到工作，工作同時繼續學JS和Node.js。人大部份情況是用async的方式處理事情。
+            4. js非常在行這種async的程式撰寫
+               1. call back function：`setTimeOut`的第一個parameter，event發生後，才執行。
+               2. 常用來處理需要時間等待的時機，例如：檔案處理、處理使用者登入…。
+               3. 這是node.js最強大的地方，它是**event driven**，同時接到好幾千個request也能處理，不需要管前一個request是否完成了。
+            5. 範例：
+               
+               ```js
+               setTimeout(()=>{
+               console.log('🐇 finished!');
+               },1000)
+               console.log('🐢 finished!');
+               ```
+            6. blocking and non-blocking function:
+               1. blocking function:
+                  1. 一些很快不需要花時間的function，通常都是blocking的function，大部份的function都是
+                  2. 例如：`JSON.stringify({name:'Richard'})`
+               2. non-blocking function:
+                  1. 一些比較花時間的function才會是non-blocking function。
+                  2. 花時間不是把cpu的時間佔住了，cpu只是代理網路卡和硬碟，那個花時間其實都是網路卡和硬碟在忙，cpu其實大部份時間都在idle，還可以做其它的事情。
+                  3. 非常適合non-blocking的，例如：時間到`setTimeOut`、網路要求`makeRequest`、檔案讀取`readFile`等。
+            7. 面試考題：js是sync還是async？
+               1. js事實上是sync，核心只有sync的部份。
+               2. browser和node.js的`libuv`提供了async的object，讓js可以去操弄asnyc，讓我們的app能有async的效果，或是說能處理async的事情。
+               3. `setTimeOute`、`readFile`這些都不是JS的核心。
+            8. multi thread:
+               1. lecture 27 multi-threading, processes, and threads `05:31`：
+               2. multi thread的程式：
+                  1. single thread主要執行順序是call stack
+                     1. 順序是從最外層的function開始放入call stack的下方，最裡層的function開始放入call stack的最上方
+                     2. 由最上方開始執行，執行完，記憶體就釋放掉
+                  2. multi thread：
+                     1. 例如c++和java，依不同情況不同thread會有不同的執行完的時間
+                     2. 有併行處理的thread，每一個thread都他自己的callstack
+                     3. 處理這些thread有兩種方式：
+                        1. 單一顆cpu在這些thread切換
+                        2. 多顆cpu一顆負責自己的thread
+                     4. `09:04`實際撰寫multi thread的code其實比上面所說的更複雜許多，而且難以debug。至少需要了解以下兩個觀念，才能讓你data和程式碼可以在不同的thread裡面一致，才能讓這些一起做用出來達到共同的目標。
+                        1. multual exclusivity
+                        2. locks
+                     5. 沒寫好常會發生所謂的**dead lock**，就是兩個thread堵住了，在等一個永遠不會發生的action，這是有經驗的開發者常需要面對的。
+                     6. 而這也是JS創造者創造JS的初衷，所以寫JS從來不需要去處理所謂的dead locks，程式碼都是sync的。
+                     7. 

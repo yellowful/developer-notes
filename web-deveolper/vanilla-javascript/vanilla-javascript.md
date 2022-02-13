@@ -184,33 +184,33 @@
         8. [四種情況下的this](https://reactkungfu.com/2015/07/why-and-how-to-bind-methods-in-your-react-component-classes/)：
            1. function invocation：沒有`.`，直接call function，this通常就是window，以下的`fun()`的`this`仍然是window，所以`this.name`會是undefined
 
-                  ```js
-                  const unicorns = {
-                     name:'oh no',
-                     func: function() {
-                        console.log(this.name)
-                     }
-                  }
-                  unicorns.func(); // oh no
-                  var fun = unicorns.func;
-                  fun(); // undefined
-                  ```
+                ```js
+                const unicorns = {
+                    name:'oh no',
+                    func: function() {
+                    console.log(this.name)
+                    }
+                }
+                unicorns.func(); // oh no
+                var fun = unicorns.func;
+                fun(); // undefined
+                ```
 
            2. method invocation：一連串的句點，this指的會是最右邊的method所在的object
 
-                  ```js
-                  var foo = {
-                     name:'foo',
-                     bar: {
-                        name:'bar',
-                        func: function() { console.log(this.name) }
-                     }
-                  };
+                ```js
+                var foo = {
+                   name:'foo',
+                   bar: {
+                      name:'bar',
+                      func: function() { console.log(this.name) }
+                   }
+                };
 
-                  foo.bar.func();// bar
-                  const fun2 = foo.bar.func;
-                  fun2(); // undefined
-                  ```
+               foo.bar.func();// bar
+               const fun2 = foo.bar.func;
+               fun2(); // undefined
+               ```
 
            3. constructor invocation：
               1. function有兩種用法，其中一種是被`new` operator使用的用法，這種function稱為function constructor，用來建立物件，它是有[歷史淵源](https://pjchender.blogspot.com/2016/06/javascriptfunction-constructornew.html)的。主要是js沒有class，而當時為了模仿當時java的class很炫的用法。

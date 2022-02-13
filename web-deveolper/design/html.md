@@ -48,11 +48,17 @@
 14. 最基本的輸入的tag是input設定的type是text，其他常用的type還有search、date、email、password、number、summit、button、checkbox
     1. checkbox是複選
     2. radio是單選
-    3. react底下要去操作radio先預載某個選項的話：
-        1. 要單一選項的checked的property設成true，其他選項設成false。
-        2. 不能用onClick，要用onChange。
-        3. name是用來設定單選群組的，所以name不要使用。
-        4. 外面包label用來顯示選項名稱。
+       1. 純JS底下的處理方式：
+          1. html裡每一個radio input要設相同的name attribute，例如：gender。
+          2. 在form sumit的時候，要取得radio的值得話，要用for loop
+             1. 去select所有name是`'gender'`的input。
+             2. 挑出attibute `checked`是true的value。
+       2. jQuery底下，在form sumit時要取得radio的值的話：`$('input[name=radioName]:checked').val();`
+       3. react底下要去操作radio先預載某個選項的話：
+           1. 要單一選項的checked的property設成true，其他選項設成false。
+           2. 不能用onClick，要用onChange。
+           3. name是用來設定單選群組的，所以name不要使用。
+           4. 外面包label用來顯示選項名稱。
 15. 拉條的做法是input type設成range，生命值這種顯示條是設定meter的tag
 16. 單選和多選的這種點選的選項，因為文字配合變化多端，所以要顯示的文字不需要被包在tag裡，而是value的屬性填入要顯示的文字就好，所以直接用input屬性設radio或checkbox就可以了。
 17. 但下拉式選單，裡面每一個選項顯示方式固定，所以直接包在tag裡就好了，所以是用select配合option的tag處理。
