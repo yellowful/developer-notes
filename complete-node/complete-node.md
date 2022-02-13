@@ -137,15 +137,64 @@
       1. 各種內建的功能，例如`fs`、`path`、`crypto`、`http`、`url`、`os`、`process`、`console`等等。
       2. 就放在裡面的檔案，例如`path.js`、`fs.js`、`crypto.js`、`http.js`、`url.js`、`os.js`、`process.js`、`console.js`等等。
    4. `./src`：
-      1. 裡面主要是Node.js bindings
+      1. 裡面主要是Node.js bindings，而不是`libuv`。
       2. 主要比較低階的C++的code，用來連接javscript世界和C++世界。
-      3. 例如：`fs.open(path[, flags[, mode], callback)`
+      3. 例如要了解：`fs.open(path[, flags[, mode], callback)`
          1. 我們可以到`./lib`裡面找到`fs.js`。
          2. 找到open這個function：`function open(path, flags, mode, callback) {`
-         3. 程式碼的最後一行可以看到`binding.open(pathModule.toNamespacedPath(path), flagsNumber, mode, req);`，而這一行就是在呼叫`./src`裡C++的程式碼。
+         3. function程式碼的最後一行可以看到`binding.open(pathModule.toNamespacedPath(path), flagsNumber, mode, req);`，而這一行就是在呼叫`./src`裡C++的程式碼。
          4. 我們可以去`./src`裡去找到`node_file.cc`。
             1. 副檔名：
                1. c++的程式碼的副檔名有：`.cc`, `.cpp`等等。
                2. `.h`：代表header，
             2. 檔案裡面可以找到initilize的function：`void Initialize(Local<Object> target,Local<Value> unused, Local<Context> context, void* priv) {`
-            3. 
+               1. 裡面有一堆`SetMethod(target,js function,c++ function)`，把js和c++連接起來。
+               2. 例如：`SetMethod(target,"open",Open)`，就是在js裡面的`fs.open()`就會開啟c++裡面的`Open()`。
+               3. 接著我們可以找到`static void Open(const FunctionCallbackInfo<Value>& args) {`
+                  1. 裡面主要做一堆validation，但是有一個地方值得看：`uv_fs_open`。
+                  2. 它是在`AsnyncCall(env, req_wrap_async,args,"open",UTF8,AfterInteger,uv_fs_open,path,flags,mode);`裡面。
+                  3. 也在`SyncCall(env,args[4],&req_wrap_sync,"open",uv_fs_open,*path,flags,mode);`裡面。
+                  4. 表示在sync或是async裡都可以用。
+                  5. `uv_`代表的就是`libuv`要用的。
+   5. 深入`libuv`：
+      1. [有自己的官網](https://libuv.org/)，可以獨立在其它地方使用。
+      2. libuv用在跟其它語言的binding連接，例如：
+         1. ruby
+         2. c++11、17
+         3. python
+         4. perl5
+         5. php
+         6. go
+         7. r
+         8. java
+         9. lisp
+         10. haskell
+      3. [原始碼](https://github.com/libuv/libuv)：
+         1. 大部份c的原始碼都在`./src`裡：
+         2. `./src/unix`包括了unix、linux、macOS的程式碼。
+            1. android-ifaddrs.c是給android用的核心。
+            2. darwin-proctitle.c是macOS用的核心。
+            3. open的功能是在`fs.c`裡面。
+            4. 和node.js binding不一樣，libuv用的是c語言，而不是c++語言，所以副檔名是`.c`。
+            5. 在`fs.c`裡面，我們可以找到`uv_fs_open`，例如這一行長這樣：`srcfd = uv_fs_open(NULL, &fs_req, req->path, O_RDONLY, 0, NULL);`
+            6. `uv_fs_open`的定義在這一行`int uv_fs_open(uv_loop_t* loop, uv_fs_t* req, const char* path, int flags, int mode, uv_fs_cb cb) {`，不過這一行看起來實際上沒做什麼，主要是去做`INIT(OPEN)`。
+            7. 這就是node.js的binding裡面真正呼叫的c的function。
+            8. 然而注意一點，真正在實作開啟檔案的function則是`uv__fs_open`，是兩條底線，那一行長這樣：`static ssize_t uv__fs_open(uv_fs_t* req){`
+               1. 這裡面才真得跟OS運作在一起，其中`r = open(req->path, req->flags, req->mode);`就是讓unix開啟檔案，讓檔案可以被操作。
+               2. 這裡最後`return r;`，就是回傳給node.js的binding，然後最後讓js可以運作。
+         3. `./src/win`包括了各種不同windows的程式碼，版本比unix的少，各個windows版本很像，所以程式碼會比unix版本簡單很多。
+            1. `fs.c`一樣也有一個`uv_fs_open`
+            2. 真正用Windows在做開啟檔案的function則是`void is__open(uv_fs_t* req) {`
+               1. 一堆DWORD就是windows的structures。
+               2. 然而這裡面的程式碼就比linux多得多了，因為：
+                  1. 這樣的動作windows就是會涉入更多東西。
+                  2. 更重要的是為了讓檔案格式能和unix相容，需要做很多的處理，如此才能跨平台。
+               3. 關鍵在於`CreateFileW()`，也就是在這一行`file = CreateFileW(req->file.pathw,access,share,NULL,disposition,attributes,NULL);`。
+               4. 這就是讓我們可以操作windows的檔案的方式。
+               5. `fd = _open_osfhandle(file, flags);`，把檔案權限傳給`fd`這個變數，讓c語言可以用這個檔案。
+               6. 最後`SET_REQ_RESULT(req, fd);`，才把`fd`回傳給node.js的binding。
+         4. sync and async
+            1. sync代表的是一行一行的執行
+            2. async代表的是有些在背景執行，就下去執行別行了
+            3. js非常在行這種async的程式撰寫
+         5. 

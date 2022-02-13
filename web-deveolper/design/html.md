@@ -24,6 +24,10 @@
          2. form tag要設onSubmit和對應的handle submit
          3. handle submit要執行event.preventDefault()，避免reload
          4. button tag要設type="submit"
+      3. tags:
+         1. `<fieldset>`：分組。
+         2. `<legend>`：分組的標題。
+         3. `<label>`：用來做為input的標題。
 4. inpute的type有很多種：
    1. text
    2. textarea
