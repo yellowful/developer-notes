@@ -346,6 +346,7 @@
     7. <http://www.ruanyifeng.com/blog/2011/06/designing_ideas_of_inheritance_mechanism_in_javascript.html>
        1. prototype()讓不同instance(object)，可以共用方法，不用多花記憶體。
        2. prototype()原來是用來解決JS沒有Class的問題，原本的function object屬性，每個instance的值都不同，但是如果要設定相同，就用prototype的方式設定。
+    8. [也可以從物件導向的角度了解prototype](https://developer.mozilla.org/zh-TW/docs/conflicting/Learn/JavaScript/Objects/Classes_in_JavaScript)
 21. ES7：
     1. .includes()在判斷array裡是否有括號裡的元素，有的話就回傳true，沒有就回傳false。
     2. .includes有另一個用法，是判斷這個字串裡是否有括號裡的字串，有的話傳true，反之傳false。

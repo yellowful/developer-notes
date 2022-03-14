@@ -204,13 +204,14 @@
                2. 常用來處理需要時間等待的時機，例如：檔案處理、處理使用者登入…。
                3. 這是node.js最強大的地方，它是**event driven**，同時接到好幾千個request也能處理，不需要管前一個request是否完成了。
             5. 範例：
-               
+
                ```js
                setTimeout(()=>{
                console.log('🐇 finished!');
                },1000)
                console.log('🐢 finished!');
                ```
+
             6. blocking and non-blocking function:
                1. blocking function:
                   1. 一些很快不需要花時間的function，通常都是blocking的function，大部份的function都是
@@ -240,4 +241,104 @@
                         2. locks
                      5. 沒寫好常會發生所謂的**dead lock**，就是兩個thread堵住了，在等一個永遠不會發生的action，這是有經驗的開發者常需要面對的。
                      6. 而這也是JS創造者創造JS的初衷，所以寫JS從來不需要去處理所謂的dead locks，程式碼都是sync的。
-                     7. 
+                  3. event loop:
+                     1. 任何的blocking function都會造成main thread的js停住，等這個blocking function處理完才會繼續進行。
+                     2. asynchronous I/O的部份(file system和network)主要由libuv來處理，他處理的方式是利用event loop。
+                     3. event loop是libuv裡的程式碼，做用就是event ready時，執行call back function。
+                     4. 所有的js code是在main thread裡執行，async的丟出來給event loop。
+                     5. lecture 28 `03:50`：event loop
+                        1. 有點像是一個老闆，決定你的程式碼何時執行，並且要求工作完成時要回報。
+                        2. 他不斷的代理async function和監聽events，而不打斷main thread。
+                        3. 丟進event loop的工作是在哪裡完成的呢？誰是員工在幫住event loop這個老闆，把事情做完呢？
+                           1. network是在OS做的。
+                           2. file system是在thread pool做的。
+                        4. thread pool：
+                           1. 包含
+                              1. main thread由v8引擎在執行的
+                              2. 其它threads
+                           2. threads pool裡的threads是c語言事先寫好的有限threads，這樣可以防止cpu不斷的開啟和關閉thread，消耗效能。
+                           3. 超過threads pool裡的threads的process，就會等待，有threads完成清空後，才會進去thread pool裡。
+
+## sockets
+
+1. polling：
+   1. 每一段時間做request
+   2. 產生的問題：
+      1. 多久一次？
+      2. 是不是要看後端資料多久改變一次？
+      3. 這個設定的時間，就產生latency。
+   3. 500ms在聊天的app中可能可以被接受，但是在自駕車、star tracking、多人遊戲中，就無法被接受了。
+   4. 時間設很短，server就無法負荷，可能要花很多錢在server上。
+2. socket
+   1. 定義：一個形成可以裝東西的空間的開口或是洞
+   2. 例如：燈泡座、眼窩。
+   3. 資訊用語例如：network sockets包含以下
+      1. ip sockets => tcp sockets (重點在於如何連接，確保資料會被收到) => websockets
+      2. ip sockets => datagram sockets (udp sockets，最重要的是low latency)
+      3. ip sockets => tcp sockets => http sockets
+   4. 其中http和websockets都是基於tcp sockets，但是是不一樣的概念。
+      1. http
+         1. 靠client送出request，server才有辦法送出response跟client溝通，server並無法無緣無故丟東西給client。
+         2. 可以用axios套件或是node-fetch套件跑http。
+      2. websockets
+         1. 則是雙向的通道，server什麼時候要丟訊息給client都可以。
+         2. ws套件：
+            1. 是server端的套件，client端不能用。
+            2. client端得用native的WebSocket object或是iosomorphic-ws套件。
+            3. server端和client端的語法不同。
+            4. 而且有瀏覽器不支援WebSocket object，那就麻煩了。
+         3. socket io套件：
+            1. server端和client端的語法、api都一樣。
+            2. 所有瀏覽器都可以用。
+            3. 不過要小心一點，為了相容性，socket io會在瀏覽器不支援WebSocket的情況下，用polling的方式跟server溝通，這就要小心效能問題。
+            4. server side和client side的程式碼，在github上是不同的repo。
+            5. server端和client端還是有所不同，必竟client端通常傳給同一個server，而server端卻可能同時傳一個訊息給所有的client。
+            6. socket io官方文件有一個emit cheatsheet可以查所有常用的用法。
+3. pong遊戲：
+   1. 原本邏輯都在前端，這可能導致作弊。
+   2. 把運算邏輯放後端
+      1. 造成後端運算量很大。
+      2. 邏輯複雜，難以debug哪個邏輯是前端，哪個邏輯是後端。
+   3. 目前project打算的作法是
+      1. server只負責傳送資料
+      2. server會指定某一方是裁判
+      3. 當開始打球時，某一方會丟出擋版移動的數據，server就會把這數據廣播出去，那麼另一方就會收到。
+      4. 裁判會把球移動的數據丟給server，server會把這數據傳給所有玩家，那麼另一位玩家就會收到。
+      5. 裁判方是single source of truth，確保雙方萬一有glitch，也能夠校準雙方的資料。
+      6. 這邊我不太確定裁判方是第三個client嗎？還是這兩個client其中之一。
+   4. socket server可以單獨用，這邊先呼叫http server，再呼叫socket server，這樣作比較保險，因之可以方便之後要用在https或是用在express server上，比較不會出問題。
+   5. websocket protocol在瀏覽器裡是長這樣：`ws://xxx.xxx....`
+   6. socket io如果遇到browser的cors error，把`const io = `改成：
+
+      ```js
+      const io = require('socket.io')(server, {
+      cors: {
+         origin: '*',
+         methods: ['GET', 'POST']
+      }
+      });
+      ```
+
+   7. socket io提供一個`socket.id`的api
+      1. 讓你的遊戲可以不用從server註冊id，就可以讓client端產生一個unique id，這樣server端就能認出個別的client是誰了。
+      2. `socket.id`是聽connect產生的，所以重新connect就會產生新的`socket.id`。
+      3. 是一段看不懂的字串。
+      4. server端的socket.id會記得同一個字串，和client端不同的是，server端記得很多組不同的socket.id。
+   8. server端
+      1. 所有的邏輯都是放在`io.on('connection',fn)`裡面，包括`socket.on('disconnect',fn)`。
+      2. broadcast有很多方式：
+         1. [參考emit cheatsheet](https://socket.io/docs/v3/emit-cheatsheet/)
+         2. sender以外都送：`.broadcast.emit()`
+         3. 所有人都送：`io.emit()`
+      3. pong遊戲邏輯是把第二個連接者的`socket.id`傳給所有人，這樣server端的邏輯較簡單，適用所有人。
+      4. 多人遊戲的重點在於透過server傳遞資料，讓雙方有相同的state，像在同一個球場上。
+      5. pong遊戲邏輯把paddle的位置傳給server，server把paddle位置`.broadcast.emit()`的方式傳給另一個人，以同步雙方paddle位置。
+   9. client端：
+      1. 重點在於把裁判和非裁判的邏輯分開。
+      2. 用`socket.on('connection',fn)`來連線。
+      3. 和server端不同的是，聽其它`socket.on()`的事件，都是在聽`connection`的外面，包括`socket.on('disconnect',fn)`。
+      4. 一個把variable的值`1=>0`和把`0=>1`的技巧，是用1去減這個variable，這樣就可以把0和1的值互換。
+      5. 裁判的重點在於single source of truth
+          1. 所有裁判會計算設定ball值的地方都要送出ball的值。
+          2. 而非裁判只需要直接接受ball的值，而不用自己算值。 
+          3. 算分的邏輯放在ball碰到界線的邏輯裡，所以裁判要把分數跟著球的資訊透過server傳給對手。

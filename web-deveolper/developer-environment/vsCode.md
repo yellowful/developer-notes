@@ -22,30 +22,29 @@
       2. shift+箭頭：選取游標移動過的地方
       3. ctr+k：砍掉下一行，mac是砍掉這一段
       4. cmd+g：尋找下一個
-   2. cmd+shift+p：搜尋所有的command，設定東西時很常用
-   3. cmd+k 接著 cmd+ d：移動到下一個相同字的地方
-   4. shift+cmd+\：跳到另一半括號上
-   5. cmd+d：選取一個variable，第二次下一個相同字的地方加上游標
-   6. shift+ctr+cmd+箭頭：可以擴張選取範圍
-   7. shift+option+f：自動格式化
-   8. com+k接著cmd+f：自動格式化選擇的部份
-   9. cmd+x(不要選取)：剪下這一行
-   10. shift+cmd+K：刪除這一行
-   11. cmd+c(不要選取)：複製這一行
-   12. option+箭頭：可以移動一整行
-   13. option+shift+箭頭：可以複製一整行到箭頭方向那一行
-   14. ctr+j：合併下一行到同一列
-   15. Option + 滑鼠：多游標
-   16. CMD+SHIFT+L：可以在選取的所有相同的字上加上游標
-   17. Command + Option + 箭頭：向上或向下插入游標
-   18. shift+option+滑鼠：可以一次插入多行游標，進行推進或退回一格
-   19. Command + Shift + \：跳轉到對應的括號
-   20. Ctrl + PgUp：滾動
-   21. Command+g：搜尋下一個相同的字
-   22. Command+d：選取下一個相同的字
-   23. ctr+tab：切換tab
-   24. cmd+K,cmd+s：叫出快速鍵說明
-   25. fn+f2：改變html開始和結束的tag。
+   2. cmd+k 接著 cmd+ d：移動到下一個相同字的地方
+   3. shift+cmd+\：跳到另一半括號上
+   4. cmd+d：選取一個variable，第二次下一個相同字的地方加上游標
+   5. shift+ctr+cmd+箭頭：可以擴張選取範圍
+   6. shift+option+f：自動格式化
+   7. com+k接著cmd+f：自動格式化選擇的部份
+   8. cmd+x(不要選取)：剪下這一行
+   9. shift+cmd+K：刪除這一行
+   10. cmd+c(不要選取)：複製這一行
+   11. option+箭頭：可以移動一整行
+   12. option+shift+箭頭：可以複製一整行到箭頭方向那一行
+   13. ctr+j：合併下一行到同一列
+   14. Option + 滑鼠：多游標
+   15. CMD+SHIFT+L：可以在選取的所有相同的字上加上游標
+   16. Command + Option + 箭頭：向上或向下插入游標
+   17. shift+option+滑鼠：可以一次插入多行游標，進行推進或退回一格
+   18. Command + Shift + \：跳轉到對應的括號
+   19. Ctrl + PgUp：滾動
+   20. Command+g：搜尋下一個相同的字
+   21. Command+d：選取下一個相同的字
+   22. ctr+tab：切換tab
+   23. cmd+K,cmd+s：叫出快速鍵說明
+   24. fn+f2：改變html開始和結束的tag。
 6. es7 extension的+tab相關縮寫：
    1. 最常用的：
       1. rce：react class component和export
@@ -96,3 +95,6 @@
    2. Accept Suggestion On Enter：設成false的話，可以設定按enter的時候，不要自動選字。
    3. [完整移除vsCode](https://stackoverflow.com/questions/42603103/how-to-completely-uninstall-vscode-on-mac)
    4. [更改shell](https://stackoverflow.com/questions/64001669/zsh-and-vscode-default-shells)
+   5. cmd+shift+p：
+      1. 搜尋所有的command，**設定東西時很常用**
+      2. `open settings`可以打開s`ettings.json`
