@@ -338,7 +338,34 @@
       2. 用`socket.on('connection',fn)`來連線。
       3. 和server端不同的是，聽其它`socket.on()`的事件，都是在聽`connection`的外面，包括`socket.on('disconnect',fn)`。
       4. 一個把variable的值`1=>0`和把`0=>1`的技巧，是用1去減這個variable，這樣就可以把0和1的值互換。
-      5. 裁判的重點在於single source of truth
+      5. 一個判斷variable是不是偶數的技巧是用`variable % 2 === 0`。
+      6. 裁判的重點在於single source of truth
           1. 所有裁判會計算設定ball值的地方都要送出ball的值。
           2. 而非裁判只需要直接接受ball的值，而不用自己算值。 
           3. 算分的邏輯放在ball碰到界線的邏輯裡，所以裁判要把分數跟著球的資訊透過server傳給對手。
+      7. disconnect：socket io有斷線自動連線的功能，所以disconnect的邏輯可以這樣寫，代表「中斷如果是server啟動中斷的話，重新連線，不然的話什麼事都不用作，socket io仍會自動繼續之前的連線」：
+
+         ```js
+         socket.on("disconnect", (reason) => {
+         if (reason === "io server disconnect") {
+            // the disconnection was initiated by the server, you need to reconnect manually
+            socket.connect();
+         }
+         // else the socket will automatically try to reconnect
+         });
+         ```
+
+4. 在expressjs上用socket io：
+   1. socket io原本就可以和expressjs用不同port，同時執行。
+   2. 如果要讓socket io和expressjs用同一個port，一起執行：
+      1. 把socket io的code移出去`sockets.js`，並exports成一個function `listen`。
+      2. 把io丟進這個listen傳到`sockets.js`，這就是dependency injection。
+      3. sec311 07:17然後把express的code export成一個function `api`，放到原本放http的code的`server.js`裡，然後放到`createServer()`中。
+   3. 整合到express中，這樣就可以deploy到任何地方了。
+5. namespaces：
+   1. 同一個socket連線，server端可以開好幾個不同的namespaces給這個socket連，例如聊天室和遊戲區用不用的namespaces，或是同一個server同時serve很多不同的遊戲也可以用不同的namespaces。
+   2. client端：什麼都不設，socket io會自動給定預設的`const socket = io('/')`。
+   3. 若client端設name space是`/pong`，server端要這樣設：`const pongNamespace = io.of('/pong')`，接下來的code是像這樣`pongNamespace.on()`。
+6. room：
+   1. 和namespace不同的地方在於，namespace是用server端的end point來區分不同的人。
+   2. room是用group來把sockets(clients)區分不同成不同的grouping sockets，這些groups只存在server。
