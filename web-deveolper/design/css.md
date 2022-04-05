@@ -91,7 +91,17 @@ almanac有詳列property
 9. 其它selector練習：https://flukeout.github.io
 > * :nth-child(2)：順得數第2個，而且是**不管哪種type**
 > * A.className：所有這個class裡的a
-10. 文字：
+10. [Pseudo-classes](https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-classes)：
+    1. 例如：
+
+      ```css
+      button:hover {
+      color: blue;
+      }
+      ```
+
+    2. 冒號後面代表的是狀態
+11. 文字：
 > * 可以改的常用屬性有style(italic)、weight(bold, lighter)、size(x%)、decoration(underline, line-throgh)
 > * 網頁內容要顯示中文的話，記得在head的地方設定meta charset，另外可以在字型設定的地方(font-family)，備用字型放上google的字型，例如：Noto Sans TC。  
 注意，html要在head載入網路的google fonts，這會有個缺點，網頁載入會稍慢一點。
