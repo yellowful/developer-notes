@@ -2,9 +2,10 @@
 
 1. cookie：
    1. 過程：
-      1. server確定密碼正確後，會丟一個cookie給browser，並在server端儲存一個cookie和一個session，用來記錄browser的state，如果logout就把這個session砍掉。
-      2. session開啟後，往後browser如果要跟server要資料，就會丟cookies出來給server，server就會檢查cookie是不是正確，如果是正確就會去找出這個user的session的資料，把資料丟給browser。
+      1. 登入時，server確定登入的密碼正確後，會丟一個cookie給browser，並在server端儲存一個cookie和一個session，用來記錄browser的state，如果logout就把這個session砍掉。
+      2. session開啟後，往後browser如果要跟server要資料，就會丟cookies出來給server，server就會檢查這個session的cookie是不是正確，如果是正確就會去找出這個user的session的資料，把資料丟給browser。
       3. 如果browser點logout，server就會把session關掉，browser就算還有cookie，也要不到資料了。
+      4. server重開機會把所有session關掉，所以browser也是會要不到資料，需要重新登入。
    2. 缺點：
       1. server需要記錄browser的state，不容易擴充。
       2. cookie有大小限制，不能包太大的payload，後端資料要再向database來要。
@@ -15,7 +16,7 @@
       2. 當使用者丟資料給server的時候，是丟token給server，server驗證token的正確性之後，不需要去找對應的cookie和session，不用動用資料庫，就可以把資料丟回給browser。
       3. logout的時候，client端直接殺掉session storage就好了，server端不用去管session，不用花資料庫記錄cookie和session。
    3. 優點：
-      1. 比較單純，server端不用記錄browser的state(session)。
+      1. 比較單純，server端不用記錄browser的login state(session)。
       2. 由於server是stateless，所以可以擴展多台server，不會有session衝突的問題。
       3. 可適用各種不同的API，後端可以多種不用的API都共用。
       4. 也可適用於手機app，像是cookie就很難在手機app上使用。
@@ -29,7 +30,7 @@
       4. <https://auth0.com/blog/refresh-tokens-what-are-they-and-when-to-use-them/>
       5. <https://security.stackexchange.com/questions/108662/why-is-bearer-required-before-the-token-in-authorization-header-in-a-http-re>
    6. Andrei的課是用兩種混用的方式來做authentication。
-      1. server端會用redis存儲對應的token，然後比對之後才回傳資料，一般做法不儲存token。
+      1. server端會用redis儲存對應的token，然後比對之後才回傳資料，一般做法不儲存token。
       2. redis是儲存在記憶體裡面，而且可以擴張，所以速度很快。
       3. token decode之後就直接是JSON資料了。
       4. 這個token是使用者資料和secrete一起hash的。
@@ -42,7 +43,7 @@
          1. 在node裡面，signin的end point要做authentication。authentication判斷如果失敗的話，表示還沒登入，應該要做sign in。如果判斷通過的話，就回傳id，讓前端去要求profile的end point。
          2. 如果sign in比對帳密成功的話，就回傳user id和token就好了，不要回傳整個user給前端，前端再用user id和token向後端要整個user，這樣每個end point就可以單獨只做一件事情，很清楚的定義end point。
          3. 用jwt.sign()來產生token，token用email和一個secrete來產生，還不會太敏感，千萬別放使用者密碼在裡面。
-            1. secrete是server端自定一個不能讓別人知道的東西，所有人都用一樣的secrete。
+         4. secrete是server端自定一個不能讓別人知道的東西，所有人都用一樣的secrete。
       2. redis client：
          1. 用來快取session，不用一直去煩postgresql
          2. 將redis server裝進docker裡面
