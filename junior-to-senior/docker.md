@@ -115,4 +115,59 @@
          1. `image: node:8.11.1`：但是現在是用其他的Dockerfile來build，所以這裡不用。
          2. [volumes的不同用法](https://stackoverflow.com/questions/34809646/what-is-the-purpose-of-volume-in-dockerfile)
          3. [深入研究volumes](https://www.linux.com/topic/cloud/docker-volumes-and-networks-compose/)
-         4. 
+
+## database
+
+1. 感覺`docker-compose`最重要或是最難的部份應該是資料庫的部份。
+2. 檔案：
+   1. repo裡開一個`postgre`的資料夾，以下檔案都放裡面
+   2. 把sql語法建立在`.sql`檔案裡，一個table一個`.sql`。
+   3. 另外可以建一個或多個`seed.sql`：預先建立一些資料進資料庫。
+   4. 另外一個檔案`deploy_schemas.sql`
+      1. 設定`.sql`的位置，讓`docker-compose`知道build的時候可以執行哪些sql語法。
+      2. 例如：(i代表執行script)
+
+         ```docker
+         \i `/docker-entrypoint-initdb.d/tables/users.sql`
+         \i `/docker-entrypoint-initdb.d/tables/login.sql`
+         \i `/docker-entrypoint-initdb.d/seed/seed.sql`
+         ```
+   5. `Dockerfile`
+      1. 用來讓`docker-compose`知道要把`.sql`複製到docker image的哪裡
+      2. 裡面長這樣：
+
+         ```docker
+         ADD /table/ /docker-entrypoint-initdb.d/tables/
+         ADD /seed/ /docker-entrypoint-initdb.d/seed/
+         ADD deploy_schemas.sql /docker-entrypoint-initdb.d/
+         ```
+
+3. 指令：
+   1. 每次要建立新的資料庫：`docker-compose up --build`
+   2. 如果只是要啟動服務：`docker-compose up`
+4. [建立資料庫的基本用法](http://joshualande.com/create-tables-sql)
+5. [docker官方的documentation](https://hub.docker.com/_/postgres/)
+6. [練習的答案](https://github.com/aneagoie/smart-brain-boost-api-dockerized/commit/a7efbdd56c9fbfb29700c3398286dedd38e56166)
+7. 網路：
+   1. 舊版的`docker-compose`要設定Link讓不同的服務可以透過網路相連接：
+
+      ```docker
+      links:
+            - postgres
+            - redis
+      ```
+
+   2. 新版的`docker-compose`不用設定`link`了：
+      1. 直接刪掉上面的code就好了
+      2. 不同的container會由container name找到對方，但是程式碼裡面記得要設定那個container name為網站的domain。
+      3. 如果要自訂`docker-compose`的網路環境的話：
+         1. [官方](https://docs.docker.com/compose/networking/)
+         2. [stack overflow](https://stackoverflow.com/questions/41294305/docker-compose-difference-between-networks-and-links)
+8. 結論：
+   1. container主要目的是
+      1. 讓各台機器都跑相同的版本的環境，減少錯誤的發生，保證我們寫的程式碼，不管在哪裡都可以跑。
+      2. 任何需要你的code的人，我們都幫他設定好需要環境，接著把code分享給他，那麼他就應該能夠正常的跑這些code。
+      3. 沒有docker，我們就必需要自己去設定每一個服務。
+   2. 額外的優勢：
+      1. 可以同時佈署很多服務。
+      2. 可以把不同服務打包在一起，佈署在不同地方，因為只需要一直duplicate就好了，不用一定要把所有服務都放在同一個地方。
