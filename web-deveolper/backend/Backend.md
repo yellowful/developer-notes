@@ -199,7 +199,7 @@ Backend
          5.  開啟遠端的app，看看是否部署成功：
               heroku open
          6.  如果沒反應，可能部署失敗，可以查看遠端記錄的訊息：
-              keroku logs --tail
+              heroku logs --tail
       3. code參數設定：
          1. 連線的地方：
             1. code監聽的port：改成process.env.PORT

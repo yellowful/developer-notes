@@ -369,3 +369,39 @@
 6. room：
    1. 和namespace不同的地方在於，namespace是用server端的end point來區分不同的人。
    2. room是用group來把sockets(clients)區分不同成不同的grouping sockets，這些groups只存在server。
+
+
+## node performance
+
+1. 雖然node是個non-blocking runtime，但是這只有file和network這些是利用event loop來產生non-blocking，而js是single thread的，所以如果有heavy load的js，仍然可能造成blocking。
+2. 例如：while迴圈不斷的check時間。
+3. 這很嚴重，會完全阻斷整台server的其它request。
+4. 容易造成blocking的程式：
+   1. `JSON.stringify();`
+   2. `JSON.parse();`
+   3. array.sort();
+   4. crypto method：用來建立hashes，key derivation function
+      1. `crypto.scrypt()`
+      2. `crypto.pbkdf2()`
+   5. 反應時間：
+      1. 小於0.1秒，使用者會覺得是「立即」反應
+      2. 小於１秒，使用者會覺得有delay，但是不會覺得被干擾
+      3. 如果超過10秒，使用者會想要去先做其它事情了。
+      4. 最好都小於3秒。
+5. cluster module：
+   1. node builtin
+   2. `const cluster = require('cluster');`
+   3. `const os = require('os');`
+   4. PM2：
+      1. 可以`npm install -g`，就可以把server裡cluster相關的code刪掉，直接下command來跑cluster
+      2. `pm2 start server.js -i max`：
+         1. i代表instance
+         2. max代表可以用最多的cpu
+      3. `pm2 logs`
+         1. 可以看到每一台server terminal的logs
+         2. `pm2 logs --lines 200`存200行的logs
+      4. `pm2 restart`
+      5. `pm2 reload server`：一個一個重開server，使用者不會發現server重開。
+
+## node authentication後半
+

@@ -306,3 +306,49 @@ Higher Order Component：
 ## 其他
 
 node.js沒有預設gzipping，所以後端server要灌套件[compresstion](https://www.npmjs.com/package/compression)
+
+## serverless function and stripe
+
+1. stripe原理：
+   1. stripe提供一個scret key
+   2. stripe不允許把secret key從前端向stripe提出payment request，所以需要從後端進行。
+2. 後端：
+   1. 提供和使用者互動以外的邏輯，例如：
+      1. database interaction
+      2. cross service interaction
+      3. data management、service management
+      4. devOps
+      5. infrastructures
+      6. scaling up resources
+   2. 基本上就是一台電腦，有著記憶體和硬碟，所有的code都是在利用這兩樣資源。
+   3. 沒有任何的使用者介面。
+   4. 用來提供前端來要的資源。
+   5. 效能：
+      1. 大部份一台server 100 req/min是沒問題的。
+      2. 10K req/min
+         1. 需要scale up，一台server無法處理這麼多request
+         2. 而這時候團隊就要思考，如何手動寫code才能scale up到幾千幾萬台server上了
+         3. 淡季時就要scale down
+         4. 非常花錢也非常花時間
+3. serverless service：
+   1. 後端功能單純時，例如只是要
+      1. make payment
+      2. api request
+      3. send email
+   2. 不用scale up和down，用多少就付多少錢。
+   3. 這些function住在server的end point上，只有在接到request時才會被丟出來執行任務。
+4. stripe設定：
+   1. 不用activate acount也可以做為開發使用，也有test mode可以用。
+   2. 關鍵在於有一個publishable key和secret key。
+   3. 前端要灌兩個stripe的library：`yarn add @stripe/stripe-js @stripe/react-stripe-js`
+   4. 主要是要利用stripe的CardElement，之前先import `Elements`，然後把`<App />`包住，讓stripe知道這個app的request是和某個帳號有關，這裡要傳publishable key進去。
+   5. `.env`：
+      1. 已內建於`create-react-app`，所以不用灌library了。
+      2. 裡面的變數一定要是`REACT_APP_`的前綴。
+      3. `.gitignore`要把`.env`過瀘掉。
+      4. 在react app裡面，透過`process.env.REACT_APP_XXX`來取得值。
+   6. 182堂課的`07:30`用publishable key去instanciate一個stripePromise，然後export給App.js用，最後當成Elements的props傳進去。
+   7. import stripe的CardElement，原來CardElement就是填信用卡的component。
+   8. 接著做一個paymentHandler來處理submit button。
+   9. 然後要import `useStripe`和`useElements`。
+   10. 

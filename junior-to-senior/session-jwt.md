@@ -13,7 +13,9 @@
    2. 過程：
       1. 和cookie很像的是，server會丟資料給browser，這個資料就是token。browser會把資料存在session storage或是global storage當中。
       2. 當使用者丟資料給server的時候，是丟token給server，server驗證token的正確性之後，不需要去找對應的cookie和session，不用動用資料庫，就可以把資料丟回給browser。
-      3. logout的時候，client端直接殺掉session storage就好了，server端不用去管session，不用花資料庫記錄cookie和session。
+      3. logout的時候
+         1. client端直接殺掉session storage就好了，server端不用去管session，不用花資料庫記錄cookie和session。
+         2. andrei的作法有把token(當作server端的state)存在redis，在log out時，也把redis上的token刪掉，這樣即使別人有token也無法登入，安全性稍高一點點。
    3. 優點：
       1. 比較單純，server端不用記錄browser的state(session)。
       2. 由於server是stateless，所以可以擴展多台server，不會有session衝突的問題。
@@ -44,14 +46,15 @@
          3. 用jwt.sign()來產生token，token用email和一個secrete來產生，還不會太敏感，千萬別放使用者密碼在裡面。
             1. secrete是server端自定一個不能讓別人知道的東西，所有人都用一樣的secrete。
       2. redis client：
-         1. 用來快取session，不用一直去煩postgresql
-         2. 將redis server裝進docker裡面
-         3. docker不需要管local host的網址，只需要設定port就好了。
-         4. docker可以讓backend、postgreSQL、redis在下一個指令下，全部啟動
-         5. 可以下一個指令，就可以透過docker，去到redis的shell裡面。
-         6. 用setToken去把id和token設進redis的key和value。
-         7. 用Promise.resolve()和Promise.reject()去把setToken改成Promise。
-         8. 後端用以下程式碼下令redis比對token，authorization是前端傳過來的token，.get()，可以得到key(也就是id)是否存在，假設是error就告訴前端，未授權。
+         1. 去npm搜尋redis client來安裝。
+         2. 用來快取session，不用一直去煩postgresql
+         3. 將redis server裝進docker裡面
+         4. docker不需要管local host的網址，只需要設定port就好了。
+         5. docker可以讓backend、postgreSQL、redis在下一個指令下，全部啟動
+         6. 可以下一個指令，就可以透過docker，去到redis的shell裡面。
+         7. 用setToken去把id和token設進redis的key和value。
+         8. 用Promise.resolve()和Promise.reject()去把setToken改成Promise。
+         9. 後端用以下程式碼下令redis比對token，authorization是前端傳過來的token，.get()，可以得到key(也就是id)是否存在，假設是error就告訴前端，未授權。
 
             ```js
             redisClient.get(authorization,(err,reply)=>{
@@ -61,7 +64,7 @@
             })
             ```
 
-         9. 我猜流量小的話，token可以不用redis來做：
+         10. 我猜流量小的話，token可以不用redis來做：
             1. 做法1：token存postgreSQL，後端比對id的token是否正確。
             2. 做法2：後端用id呼叫postgreSQL要email，並呼叫jwt比對token，比較是否正確。
             3. 做法3：一般常見做法應該是這樣，直接呼叫jwt比對token裡面藏的secrete是不是正確，正確的話，就直接取用postgreSQL進行後續處理。

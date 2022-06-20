@@ -84,7 +84,7 @@
    4. 組織各種container的英文用語叫orchestrate，精心策劃的意思。
    5. 基本指令：
       1. `docker-compose build`：[建立所有container](https://docs.docker.com/compose/reference/build/)，每次設定有更改都要執行一次。
-      2. `docker-compose run container_service_name`：啟動`docker-compose.yml`裡面的[某個service](https://docs.docker.com/compose/reference/run/)，比較少用。
+      2. `docker-compose run container_service_name`：只啟動`docker-compose.yml`裡面的[某個service](https://docs.docker.com/compose/reference/run/)，這種用法比較少用。
       3. `docker-compose down`：把所有container都關掉，避免衝突。
       4. `docker-compose up --build`：[啟動所有services](https://docs.docker.com/compose/reference/up/)，比run常用。
       5. 範例：
@@ -109,10 +109,16 @@
             # 冒號前面是host的檔案位置，冒號後面是container在host的image位置，這樣host的檔案有變動的話，docker也會自動map給container
             volumes:
               - ./:/usr/src/docker-exercise
-        ```
+          ```
 
-      6. 其它：
+      6. 其它資料：
          1. `image: node:8.11.1`：但是現在是用其他的Dockerfile來build，所以這裡不用。
          2. [volumes的不同用法](https://stackoverflow.com/questions/34809646/what-is-the-purpose-of-volume-in-dockerfile)
          3. [深入研究volumes](https://www.linux.com/topic/cloud/docker-volumes-and-networks-compose/)
-         4. 
+         4. [安裝postgres](https://hub.docker.com/_/postgres/)
+      7. 其它指令：
+         1. `docker-compose up -d`：在背景執行
+         2. `docker-compose exec container-name bash`：進去container裡。
+      8. 注意事項：
+         1. 安裝其它image進docker-compose的時候，記得先把所有的container關掉。
+         2. 
